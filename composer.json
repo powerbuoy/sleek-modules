@@ -9,5 +9,9 @@
     ],
     "autoload": {
         "files": ["sleek-module.php", "sleek-modules.php"]
+    },
+    "require": {
+        "icanboogie/inflector": "^1.5",
+        "powerbuoy/sleek-acf": "dev-master"
     }
 }
