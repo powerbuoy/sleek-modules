@@ -35,20 +35,22 @@ function get_file_meta () {
 
 ####################
 # Create all modules
-if ($files = get_file_meta()) {
-	foreach ($files as $file) {
-		# Include the class
-		require_once $file->path;
+add_action('after_setup_theme', function () {
+	if ($files = get_file_meta()) {
+		foreach ($files as $file) {
+			# Include the class
+			require_once $file->path;
 
-		# Create instance of class
-		$fullClassName = "Sleek\Modules\\$file->className";
+			# Create instance of class
+			$fullClassName = "Sleek\Modules\\$file->className";
 
-		$obj = new $fullClassName;
+			$obj = new $fullClassName;
 
-		# Run callback
-		$obj->created();
+			# Run callback
+			$obj->created();
+		}
 	}
-}
+});
 
 ######################
 # Render single module
