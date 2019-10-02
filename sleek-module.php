@@ -2,13 +2,13 @@
 namespace Sleek\Modules;
 
 abstract class Module {
-	protected $templateFields;
+	protected $templateData;
 	protected $inflector;
 	protected $moduleName;
 	protected $snakeName;
 	protected $className;
 
-	public function __construct ($fields = []) {
+	public function __construct (array $fields = []) {
 		# Name some stuff
 		$this->inflector = \ICanBoogie\Inflector::get('en');
 		$this->className = (new \ReflectionClass($this))->getShortName(); # https://coderwall.com/p/cpxxxw/php-get-class-name-without-namespace;
@@ -18,11 +18,6 @@ abstract class Module {
 		# Get field defaults
 		$defaultFields = $this->fields();
 
-		# Passed in fields is ACF post_id
-		if (!is_array($fields)) {
-			$fields = get_field($this->snakeName, $fields);
-		}
-
 		# Merge passed in with default
 		foreach ($defaultFields as $defaultField) {
 			if (isset($defaultField['name']) and !isset($fields[$defaultField['name']])) {
@@ -31,7 +26,7 @@ abstract class Module {
 		}
 
 		# Store for rendering
-		$this->templateFields = $fields;
+		$this->templateData = $fields;
 	}
 
 	public function fields () {
@@ -47,7 +42,7 @@ abstract class Module {
 	}
 
 	public function get_field ($name) {
-		return $this->templateFields[$name] ?? null;
+		return $this->templateData[$name] ?? null;
 	}
 
 	public function render ($template = null) {
@@ -58,7 +53,7 @@ abstract class Module {
 
 		# We found a template to render the module
 		if ($templatePath) {
-			\Sleek\Utils\get_template_part("$modulesPath{$this->moduleName}/$template", null, array_merge($this->data(), $this->templateFields));
+			\Sleek\Utils\get_template_part("$modulesPath{$this->moduleName}/$template", null, array_merge($this->data(), $this->templateData));
 		}
 	}
 }

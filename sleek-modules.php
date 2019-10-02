@@ -55,10 +55,92 @@ if ($files = get_file_meta()) {
 # TODO: Support for template only module?
 function render ($name, $fields = [], $template = null) {
 	$inflector = \ICanBoogie\Inflector::get('en');
+	$snakeName = $inflector->underscore($name);
 	$className = $inflector->camelize($name);
 	$fullClassName = "Sleek\Modules\\$className";
 
-	$obj = new $fullClassName($fields);
+	if (!is_array($fields)) {
+		$fields = get_field($snakeName, $fields);
+	}
 
-	$obj->render($template);
+	if ($fields !== null) {
+		$obj = new $fullClassName($fields);
+
+		$obj->render($template);
+	}
+}
+
+###############################
+# Render flexible content field
+function render_flexible ($name, $postId) {
+	if ($modules = get_field($name, $postId)) {
+		foreach ($modules as $module) {
+			$moduleName = str_replace('_', '-', $module['acf_fc_layout']);
+
+			render($moduleName, $module); # TODO: template
+		}
+	}
+}
+
+####################################
+# Returns all ACF fields for modules
+# TODO: Support for template only module?
+function get_module_fields (array $modules, array $args = []) {
+	$inflector = \ICanBoogie\Inflector::get('en');
+	$fields = [];
+	$args = array_merge([
+		'flexible' => false,
+		'tabbed' => true,
+		'key' => 'untitled'
+	], $args);
+
+	foreach ($modules as $module) {
+		$className = $inflector->camelize($module);
+		$fullClassName = "Sleek\Modules\\$className";
+		$snakeName = $inflector->underscore($module);
+		$label = $inflector->titleize($module);
+
+		# TODO: Module class should have flexibleConfig() that merges with this
+		$field = [
+			'name' => $snakeName,
+			'label' => __($label, 'sleek'),
+			'sub_fields' => [],
+		#	'max' => 1, # TODO: Add support for this
+		];
+
+		if ($args['flexible']) {
+			# TODO: Add template field
+		}
+		else {
+			$field['type'] = 'group';
+
+			if ($args['tabbed']) {
+				$fields[] = [
+					'name' => $snakeName . '_tab',
+					'label' => $label,
+					'type' => 'tab'
+				];
+			}
+		}
+
+		# Create module class
+		$obj = new $fullClassName($fields);
+
+		# And get potential fields
+		if ($moduleFields = $obj->fields()) {
+			$field['sub_fields'] = $moduleFields;
+		}
+		# No fields for this module
+		else {
+			$field['sub_fields'][] = [
+				'name' => $snakeName . '_message',
+				'label' => __('No config', 'sleek'),
+				'message' => __('This module requires no configuration.', 'sleek')
+			];
+		}
+
+		$fields[] = $field;
+	}
+
+	return \Sleek\Acf\generate_keys($fields, $args['key']);
 }
