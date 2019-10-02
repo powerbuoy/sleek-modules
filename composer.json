@@ -12,6 +12,7 @@
     },
     "require": {
         "icanboogie/inflector": "^1.5",
-        "powerbuoy/sleek-acf": "dev-master"
+        "powerbuoy/sleek-acf": "dev-master",
+        "powerbuoy/sleek-utils": "dev-master"
     }
 }

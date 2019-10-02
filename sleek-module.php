@@ -2,8 +2,44 @@
 namespace Sleek\Modules;
 
 abstract class Module {
-	public function __construct () {
+	protected $templateFields;
+	protected $inflector;
+	protected $moduleName;
+	protected $snakeName;
+	protected $className;
 
+	public function __construct ($fields = []) {
+		# Name some stuff
+		$this->inflector = \ICanBoogie\Inflector::get('en');
+		$this->className = (new \ReflectionClass($this))->getShortName(); # https://coderwall.com/p/cpxxxw/php-get-class-name-without-namespace;
+		$this->snakeName = $this->inflector->underscore($this->className);
+		$this->moduleName = str_replace('_', '-', $this->snakeName);
+
+		# Get field defaults
+		$defaultFields = $this->fields();
+
+		# Passed in fields is ACF post_id
+		if (!is_array($fields)) {
+			$fields = get_field($this->snakeName, $fields);
+		}
+
+		# Merge passed in with default
+		foreach ($defaultFields as $defaultField) {
+			if (isset($defaultField['name']) and !isset($fields[$defaultField['name']])) {
+				$fields[$defaultField['name']] = $defaultField['default_value'] ?? null;
+			}
+		}
+
+		# Store for rendering
+		$this->templateFields = $fields;
+	}
+
+	protected function fields () {
+		return [];
+	}
+
+	protected function data () {
+		return [];
 	}
 
 	public function created () {
@@ -11,47 +47,18 @@ abstract class Module {
 	}
 
 	public function get_field ($name) {
-
+		return $this->templateFields[$name] ?? null;
 	}
 
-	public function fields () {
-		return [];
-	}
-
-	public function data () {
-		return [];
-	}
-
-	public function render ($template = null, $fields = []) {
-		$inflector = \ICanBoogie\Inflector::get('en');
-
+	public function render ($template = null) {
 		# Work out path to template
 		$template = $template ?? apply_filters('sleek_modules_default_template', 'template'); # Default to template.php
 		$modulesPath = apply_filters('sleek_modules_path', '/modules/');
-		$className = (new \ReflectionClass($this))->getShortName(); # https://coderwall.com/p/cpxxxw/php-get-class-name-without-namespace
-		$snakeName = $inflector->underscore($className);
-		$moduleName = str_replace('_', '-', $snakeName);
-		$templatePath = locate_template("$modulesPath$moduleName/$template.php");
+		$templatePath = locate_template("$modulesPath{$this->moduleName}/$template.php");
 
 		# We found a template to render the module
-		if ($template) {
-			# Get field defaults
-			$defaultFields = $this->fields();
-
-			# Passed in fields is ACF post_id
-			if (!is_array($fields)) {
-				$fields = get_field($snakeName, $fields);
-			}
-
-			# Merge passed in with default
-			foreach ($defaultFields as $field) {
-				if (isset($field['name']) and !isset($fields[$field['name']])) {
-					$fields[$field['name']] = $field['default_value'] ?? null;
-				}
-			}
-
-			# Include template - pass in fields and data
-			\Sleek\Utils\get_template_part("$modulesPath$moduleName/$template", null, array_merge($this->data(), $fields));
+		if ($templatePath) {
+			\Sleek\Utils\get_template_part("$modulesPath{$this->moduleName}/$template", null, array_merge($this->data(), $this->templateFields));
 		}
 	}
 }

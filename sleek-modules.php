@@ -52,12 +52,12 @@ if ($files = get_file_meta()) {
 
 ######################
 # Render single module
-function render ($name, $args = []) {
+function render ($name, $fields = [], $template = null) {
 	$inflector = \ICanBoogie\Inflector::get('en');
 	$className = $inflector->camelize($name);
 	$fullClassName = "Sleek\Modules\\$className";
 
-	$obj = new $fullClassName;
+	$obj = new $fullClassName($fields);
 
-	$obj->render();
+	$obj->render($template);
 }
