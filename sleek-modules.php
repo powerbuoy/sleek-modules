@@ -52,6 +52,7 @@ if ($files = get_file_meta()) {
 
 ######################
 # Render single module
+# TODO: Support for template only module?
 function render ($name, $fields = [], $template = null) {
 	$inflector = \ICanBoogie\Inflector::get('en');
 	$className = $inflector->camelize($name);
