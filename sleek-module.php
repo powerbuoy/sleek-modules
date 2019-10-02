@@ -34,11 +34,11 @@ abstract class Module {
 		$this->templateFields = $fields;
 	}
 
-	protected function fields () {
+	public function fields () {
 		return [];
 	}
 
-	protected function data () {
+	public function data () {
 		return [];
 	}
 
