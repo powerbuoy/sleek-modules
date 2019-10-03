@@ -16,6 +16,7 @@ abstract class Module {
 		$this->snakeName = $this->inflector->underscore($this->className);
 		$this->moduleName = str_replace('_', '-', $this->snakeName);
 		$this->acfKey = $acfKey;
+		$this->acfKeyPrefix = "{$acfKey}_{$this->snakeName}";
 
 		# Get field defaults
 		$defaultFields = apply_filters('sleek_module_fields', $this->fields());
