@@ -7,16 +7,18 @@ abstract class Module {
 	protected $moduleName;
 	protected $snakeName;
 	protected $className;
+	protected $acfKey;
 
-	public function __construct (array $fields = []) {
+	public function __construct (array $fields = [], $acfKey = null) {
 		# Name some stuff
 		$this->inflector = \ICanBoogie\Inflector::get('en');
 		$this->className = (new \ReflectionClass($this))->getShortName(); # https://coderwall.com/p/cpxxxw/php-get-class-name-without-namespace;
 		$this->snakeName = $this->inflector->underscore($this->className);
 		$this->moduleName = str_replace('_', '-', $this->snakeName);
+		$this->acfKey = $acfKey;
 
 		# Get field defaults
-		$defaultFields = $this->fields();
+		$defaultFields = apply_filters('sleek_module_fields', $this->fields());
 
 		# Merge passed in with default
 		foreach ($defaultFields as $defaultField) {

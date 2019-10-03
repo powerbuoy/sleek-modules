@@ -87,14 +87,9 @@ function render_flexible ($name, $postId) {
 ####################################
 # Returns all ACF fields for modules
 # TODO: Support for template only module?
-function get_module_fields (array $modules, array $args = []) {
+function get_module_fields (array $modules, $key, $layout = 'tabbed') {
 	$inflector = \ICanBoogie\Inflector::get('en');
 	$fields = [];
-	$args = array_merge([
-		'flexible' => false,
-		'tabbed' => true,
-		'key' => 'untitled'
-	], $args);
 
 	foreach ($modules as $module) {
 		$className = $inflector->camelize($module);
@@ -102,21 +97,22 @@ function get_module_fields (array $modules, array $args = []) {
 		$snakeName = $inflector->underscore($module);
 		$label = $inflector->titleize($module);
 
-		# TODO: Module class should have flexibleConfig() that merges with this
 		$field = [
 			'name' => $snakeName,
 			'label' => __($label, 'sleek'),
-			'sub_fields' => [],
-		#	'max' => 1, # TODO: Add support for this
+			'sub_fields' => []
 		];
 
-		if ($args['flexible']) {
+		# Flexible module
+		if ($layout === 'flexible') {
 			# TODO: Add template field
 		}
+		# Sticky module
 		else {
 			$field['type'] = 'group';
 
-			if ($args['tabbed']) {
+			# With tabs
+			if ($layout === 'tabbed') {
 				$fields[] = [
 					'name' => $snakeName . '_tab',
 					'label' => $label,
@@ -126,16 +122,16 @@ function get_module_fields (array $modules, array $args = []) {
 		}
 
 		# Create module class
-		$obj = new $fullClassName($fields);
+		$obj = new $fullClassName($fields, $key);
 
 		# And get potential fields
-		if ($moduleFields = $obj->fields()) {
+		if ($moduleFields = apply_filters('sleek_module_fields', $obj->fields())) {
 			$field['sub_fields'] = $moduleFields;
 		}
 		# No fields for this module
 		else {
 			$field['sub_fields'][] = [
-				'name' => $snakeName . '_message',
+				'name' => 'message',
 				'label' => __('No config', 'sleek'),
 				'message' => __('This module requires no configuration.', 'sleek')
 			];
@@ -144,5 +140,5 @@ function get_module_fields (array $modules, array $args = []) {
 		$fields[] = $field;
 	}
 
-	return \Sleek\Acf\generate_keys($fields, $args['key']);
+	return \Sleek\Acf\generate_keys($fields, $key);
 }
