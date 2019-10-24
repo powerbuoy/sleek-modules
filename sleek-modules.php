@@ -1,9 +1,8 @@
 <?php
 namespace Sleek\Modules;
 
-#############################
-# Get array of file meta data
-# about module files
+##########################################
+# Get array of file meta data in /modules/
 function get_file_meta () {
 	$path = get_stylesheet_directory() . apply_filters('sleek_modules_path', '/modules/') . '**/module.php';
 	$inflector = \ICanBoogie\Inflector::get('en');
@@ -11,18 +10,20 @@ function get_file_meta () {
 
 	foreach (glob($path) as $file) {
 		$pathinfo = pathinfo($file);
-		$basename = basename($pathinfo['dirname']);
-		$snakeName = $inflector->underscore($basename);
-		$className = $inflector->camelize($basename);
-		$label = $inflector->titleize($basename);
+		$name = basename($pathinfo['dirname']);
+		$snakeName = $inflector->underscore($name);
+		$className = $inflector->camelize($name);
+		$label = $inflector->titleize($name);
 		$labelPlural = $inflector->pluralize($label);
 		$slug = str_replace('_', '-', $snakeName);
 
 		$files[] = (object) [
 			'pathinfo' => $pathinfo,
+			'name' => $name,
 			'filename' => $pathinfo['filename'],
 			'snakeName' => $snakeName,
 			'className' => $className,
+			'fullClassName' => "Sleek\Modules\\$className",
 			'label' => $label,
 			'labelPlural' => $labelPlural,
 			'slug' => $slug,
@@ -42,9 +43,7 @@ add_action('after_setup_theme', function () {
 			require_once $file->path;
 
 			# Create instance of class
-			$fullClassName = "Sleek\Modules\\$file->className";
-
-			$obj = new $fullClassName;
+			$obj = new $file->fullClassName;
 
 			# Run callback
 			$obj->created();
@@ -61,10 +60,12 @@ function render ($name, $fields = [], $template = null) {
 	$className = $inflector->camelize($name);
 	$fullClassName = "Sleek\Modules\\$className";
 
+	# Fields is assumed to be an ACF ID
 	if (!is_array($fields)) {
 		$fields = get_field($snakeName, $fields);
 	}
 
+	# Make sure we have some fields
 	if ($fields !== null) {
 		$obj = new $fullClassName($fields);
 
@@ -97,6 +98,7 @@ function get_module_fields (array $modules, $key, $layout = 'tabbed') {
 		$snakeName = $inflector->underscore($module);
 		$label = $inflector->titleize($module);
 
+		# TODO: Support for module->fieldConfig
 		$field = [
 			'name' => $snakeName,
 			'label' => __($label, 'sleek'),
@@ -122,6 +124,7 @@ function get_module_fields (array $modules, $key, $layout = 'tabbed') {
 		}
 
 		# Create module class
+		# TODO: Support for no class module
 		$obj = new $fullClassName($fields, $key);
 
 		# And get potential fields
