@@ -19,7 +19,7 @@ add_action('after_setup_theme', function () {
 			$obj = new $fullClassName;
 
 			# Run callback
-			# TODO: Use do_action sleek_module_created_{$moduleName} instead?
+			# TODO: Use do_action sleek_module_created($moduleName) instead?
 			$obj->created();
 		}
 	}
@@ -56,7 +56,6 @@ function render_flexible ($name, $postId) {
 
 ####################################
 # Returns all ACF fields for modules
-# TODO: Support for template only module?
 function get_module_fields (array $modules, $key, $layout = 'tabbed') {
 	$fields = [];
 
@@ -67,7 +66,7 @@ function get_module_fields (array $modules, $key, $layout = 'tabbed') {
 		$fullClassName = "Sleek\Modules\\$className";
 		$moduleFields = null;
 
-		# TODO: Support for module->fieldConfig
+		# TODO: Support for module->fieldConfig (or apply_filters sleek_module_fields_config)
 		$field = [
 			'name' => $snakeName,
 			'label' => __($label, 'sleek'),
@@ -106,6 +105,7 @@ function get_module_fields (array $modules, $key, $layout = 'tabbed') {
 		else {
 			$field['sub_fields'][] = [
 				'name' => 'message',
+				'type' => 'message',
 				'label' => __('No config', 'sleek'),
 				'message' => __('This module requires no configuration.', 'sleek')
 			];

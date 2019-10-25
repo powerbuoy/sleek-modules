@@ -64,5 +64,8 @@ abstract class Module {
 		if ($templatePath) {
 			\Sleek\Utils\get_template_part("$modulesPath{$this->moduleName}/$template", null, array_merge($this->data(), $this->templateData));
 		}
+		else {
+			# TODO: Print something even if template is missing, like missing template
+		}
 	}
 }
