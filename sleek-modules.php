@@ -1,50 +1,25 @@
 <?php
 namespace Sleek\Modules;
 
-##########################################
-# Get array of file meta data in /modules/
-function get_file_meta () {
-	$path = get_stylesheet_directory() . apply_filters('sleek_modules_path', '/modules/') . '**/module.php';
-	$files = [];
+#####################################
+# Run all modules' created() callback
+add_action('after_setup_theme', function () {
+	$path = get_stylesheet_directory() . '/modules/**/module.php';
 
 	foreach (glob($path) as $file) {
 		$pathinfo = pathinfo($file);
-		$name = basename($pathinfo['dirname']);
-		$snakeName = \Sleek\Utils\convert_case($name, 'snake');
-		$className = \Sleek\Utils\convert_case($name, 'camel');
-		$label = \Sleek\Utils\convert_case($name, 'title');
-		$labelPlural = \Sleek\Utils\convert_case($label, 'plural');
-		$slug = \Sleek\Utils\convert_case($name, 'kebab');
+		$className = \Sleek\Utils\convert_case(basename($pathinfo['dirname']), 'camel');
+		$fullClassName = "Sleek\Modules\\$className";
 
-		$files[] = (object) [
-			'pathinfo' => $pathinfo,
-			'name' => $name,
-			'filename' => $pathinfo['filename'],
-			'snakeName' => $snakeName,
-			'className' => $className,
-			'fullClassName' => "Sleek\Modules\\$className",
-			'label' => $label,
-			'labelPlural' => $labelPlural,
-			'slug' => $slug,
-			'path' => $file
-		];
-	}
+		# Include the class
+		require_once $file;
 
-	return $files;
-}
-
-####################
-# Create all modules
-add_action('after_setup_theme', function () {
-	if ($files = get_file_meta()) {
-		foreach ($files as $file) {
-			# Include the class
-			require_once $file->path;
-
-			# Create instance of class
-			$obj = new $file->fullClassName;
+		# Create instance of class
+		if (class_exists($fullClassName)) {
+			$obj = new $fullClassName;
 
 			# Run callback
+			# TODO: Use do_action sleek_module_created_{$moduleName} instead?
 			$obj->created();
 		}
 	}
@@ -52,22 +27,18 @@ add_action('after_setup_theme', function () {
 
 ######################
 # Render single module
-# TODO: Support for template only module?
 function render ($name, $fields = [], $template = null) {
-	$snakeName = \Sleek\Utils\convert_case($name, 'snake');
 	$className = \Sleek\Utils\convert_case($name, 'camel');
 	$fullClassName = "Sleek\Modules\\$className";
 
-	# Fields is assumed to be an ACF ID
-	if (!is_array($fields)) {
-		$fields = get_field($snakeName, $fields);
-	}
-
-	# Make sure we have some fields
-	if ($fields !== null) {
+	if (class_exists($fullClassName)) {
 		$obj = new $fullClassName($fields);
 
 		$obj->render($template);
+	}
+	else {
+		# TODO: Support for template only module
+		# \Sleek\Utils\get_template_part("...", null, $fields);
 	}
 }
 
@@ -90,10 +61,11 @@ function get_module_fields (array $modules, $key, $layout = 'tabbed') {
 	$fields = [];
 
 	foreach ($modules as $module) {
-		$className = \Sleek\Utils\convert_case($module, 'camel');
-		$fullClassName = "Sleek\Modules\\$className";
 		$snakeName = \Sleek\Utils\convert_case($module, 'snake');
 		$label = \Sleek\Utils\convert_case($module, 'title');
+		$className = \Sleek\Utils\convert_case($module, 'camel');
+		$fullClassName = "Sleek\Modules\\$className";
+		$moduleFields = null;
 
 		# TODO: Support for module->fieldConfig
 		$field = [
@@ -121,11 +93,13 @@ function get_module_fields (array $modules, $key, $layout = 'tabbed') {
 		}
 
 		# Create module class
-		# TODO: Support for no class module
-		$obj = new $fullClassName($fields, $key);
+		if (class_exists($fullClassName)) {
+			$obj = new $fullClassName;
+			$moduleFields = $obj->get_fields($key);
+		}
 
 		# And get potential fields
-		if ($moduleFields = apply_filters('sleek_module_fields', $obj->fields())) {
+		if ($moduleFields) {
 			$field['sub_fields'] = $moduleFields;
 		}
 		# No fields for this module
