@@ -8,6 +8,7 @@ abstract class Module {
 	protected $className;
 	protected $acfKey;
 
+	# Create module
 	public function __construct ($templateData = []) {
 		# Name some stuff
 		$this->className = (new \ReflectionClass($this))->getShortName(); # https://coderwall.com/p/cpxxxw/php-get-class-name-without-namespace;
@@ -34,26 +35,32 @@ abstract class Module {
 		$this->templateData = $templateData;
 	}
 
+	# Returns all fields and potential defaults for this module
 	public function fields () {
 		return [];
 	}
 
+	# Returns all fields before they're sent to ACF
 	public function get_fields ($acfKey = null) {
 		return apply_filters('sleek_module_fields', $this->fields());
 	}
 
+	# Additional template data
 	public function data () {
 		return [];
 	}
 
-	public function created () {
+	# TODO: deprecate
+	/* public function created () {
 
-	}
+	} */
 
+	# Get a single field
 	public function get_field ($name) {
 		return $this->templateData[$name] ?? null;
 	}
 
+	# Render module
 	public function render ($template = null) {
 		# Work out path to template
 		$template = $template ?? 'template'; # Default to template.php

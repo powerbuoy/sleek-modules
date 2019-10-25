@@ -20,7 +20,7 @@ add_action('after_setup_theme', function () {
 
 			# Run callback
 			# TODO: Use do_action sleek_module_created($moduleName) instead?
-			$obj->created();
+			# $obj->created();
 		}
 	}
 });
@@ -31,23 +31,30 @@ function render ($name, $fields = [], $template = null) {
 	$className = \Sleek\Utils\convert_case($name, 'camel');
 	$fullClassName = "Sleek\Modules\\$className";
 
+	# A modules/module-name/module.php type module
 	if (class_exists($fullClassName)) {
 		$obj = new $fullClassName($fields);
 
 		$obj->render($template);
 	}
 	else {
-		# TODO: Support for template only module
-		# \Sleek\Utils\get_template_part("...", null, $fields);
+		# A modules/module-name type module
+		if (locate_template("modules/$name.php")) {
+			\Sleek\Utils\get_template_part("modules/$name", null, $fields);
+		}
+		# No class and no template
+		else {
+			# TODO: throw exception? message on the page?
+		}
 	}
 }
 
 ###############################
 # Render flexible content field
-function render_flexible ($name, $postId) {
-	if ($modules = get_field($name, $postId)) {
+function render_flexible ($name, $id) {
+	if ($modules = get_field($name, $id)) {
 		foreach ($modules as $module) {
-			$moduleName = str_replace('_', '-', $module['acf_fc_layout']);
+			$moduleName = \Sleek\Utils\convert_case($module['acf_fc_layout'], 'kebab');
 
 			render($moduleName, $module); # TODO: template
 		}
@@ -114,5 +121,6 @@ function get_module_fields (array $modules, $key, $layout = 'tabbed') {
 		$fields[] = $field;
 	}
 
+	# Generate unique keys for each field
 	return \Sleek\Acf\generate_keys($fields, $key);
 }
