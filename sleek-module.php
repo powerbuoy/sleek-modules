@@ -3,7 +3,6 @@ namespace Sleek\Modules;
 
 abstract class Module {
 	protected $templateData;
-	protected $inflector;
 	protected $moduleName;
 	protected $snakeName;
 	protected $className;
@@ -11,10 +10,9 @@ abstract class Module {
 
 	public function __construct (array $fields = [], $acfKey = null) {
 		# Name some stuff
-		$this->inflector = \ICanBoogie\Inflector::get('en');
 		$this->className = (new \ReflectionClass($this))->getShortName(); # https://coderwall.com/p/cpxxxw/php-get-class-name-without-namespace;
-		$this->snakeName = $this->inflector->underscore($this->className);
-		$this->moduleName = str_replace('_', '-', $this->snakeName);
+		$this->snakeName = \Sleek\Utils\convert_case($this->className, 'snake');
+		$this->moduleName = \Sleek\Utils\convert_case($this->className, 'kebab');
 		$this->acfKey = $acfKey;
 		$this->acfKeyPrefix = "{$acfKey}_{$this->snakeName}";
 

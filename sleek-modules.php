@@ -5,17 +5,16 @@ namespace Sleek\Modules;
 # Get array of file meta data in /modules/
 function get_file_meta () {
 	$path = get_stylesheet_directory() . apply_filters('sleek_modules_path', '/modules/') . '**/module.php';
-	$inflector = \ICanBoogie\Inflector::get('en');
 	$files = [];
 
 	foreach (glob($path) as $file) {
 		$pathinfo = pathinfo($file);
 		$name = basename($pathinfo['dirname']);
-		$snakeName = $inflector->underscore($name);
-		$className = $inflector->camelize($name);
-		$label = $inflector->titleize($name);
-		$labelPlural = $inflector->pluralize($label);
-		$slug = str_replace('_', '-', $snakeName);
+		$snakeName = \Sleek\Utils\convert_case($name, 'snake');
+		$className = \Sleek\Utils\convert_case($name, 'camel');
+		$label = \Sleek\Utils\convert_case($name, 'title');
+		$labelPlural = \Sleek\Utils\convert_case($label, 'plural');
+		$slug = \Sleek\Utils\convert_case($name, 'kebab');
 
 		$files[] = (object) [
 			'pathinfo' => $pathinfo,
@@ -55,9 +54,8 @@ add_action('after_setup_theme', function () {
 # Render single module
 # TODO: Support for template only module?
 function render ($name, $fields = [], $template = null) {
-	$inflector = \ICanBoogie\Inflector::get('en');
-	$snakeName = $inflector->underscore($name);
-	$className = $inflector->camelize($name);
+	$snakeName = \Sleek\Utils\convert_case($name, 'snake');
+	$className = \Sleek\Utils\convert_case($name, 'camel');
 	$fullClassName = "Sleek\Modules\\$className";
 
 	# Fields is assumed to be an ACF ID
@@ -89,14 +87,13 @@ function render_flexible ($name, $postId) {
 # Returns all ACF fields for modules
 # TODO: Support for template only module?
 function get_module_fields (array $modules, $key, $layout = 'tabbed') {
-	$inflector = \ICanBoogie\Inflector::get('en');
 	$fields = [];
 
 	foreach ($modules as $module) {
-		$className = $inflector->camelize($module);
+		$className = \Sleek\Utils\convert_case($module, 'camel');
 		$fullClassName = "Sleek\Modules\\$className";
-		$snakeName = $inflector->underscore($module);
-		$label = $inflector->titleize($module);
+		$snakeName = \Sleek\Utils\convert_case($module, 'snake');
+		$label = \Sleek\Utils\convert_case($module, 'title');
 
 		# TODO: Support for module->fieldConfig
 		$field = [
@@ -107,7 +104,7 @@ function get_module_fields (array $modules, $key, $layout = 'tabbed') {
 
 		# Flexible module
 		if ($layout === 'flexible') {
-			# TODO: Add template field
+			# TODO: Add template field (and "HIDDEN" if module->fieldConfig->is_hidable)
 		}
 		# Sticky module
 		else {
