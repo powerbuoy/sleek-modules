@@ -16,8 +16,8 @@ add_action('after_setup_theme', function () {
 
 		# Create instance of class and run callback
 		if (class_exists($fullClassName)) {
-			# $obj = new $fullClassName;
-			# $obj->created(); # TODO: Use do_action sleek_module_created($moduleName) instead?
+			$obj = new $fullClassName;
+			$obj->created();
 		}
 	}
 });

@@ -50,10 +50,10 @@ abstract class Module {
 		return [];
 	}
 
-	# TODO: deprecate
-	/* public function created () {
+	# Lifecycle hook
+	public function created () {
 
-	} */
+	}
 
 	# Get a single field
 	public function get_field ($name) {
