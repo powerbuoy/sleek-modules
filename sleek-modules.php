@@ -1,8 +1,8 @@
 <?php
 namespace Sleek\Modules;
 
-#####################################
-# Run all modules' created() callback
+###################################
+# Run all modules' created callback
 add_action('after_setup_theme', function () {
 	$path = get_stylesheet_directory() . '/modules/**/module.php';
 
@@ -14,13 +14,10 @@ add_action('after_setup_theme', function () {
 		# Include the class
 		require_once $file;
 
-		# Create instance of class
+		# Create instance of class and run callback
 		if (class_exists($fullClassName)) {
-			$obj = new $fullClassName;
-
-			# Run callback
-			# TODO: Use do_action sleek_module_created($moduleName) instead?
-			# $obj->created();
+			# $obj = new $fullClassName;
+			# $obj->created(); # TODO: Use do_action sleek_module_created($moduleName) instead?
 		}
 	}
 });
@@ -38,7 +35,7 @@ function render ($name, $fields = [], $template = null) {
 		$obj->render($template);
 	}
 	else {
-		# A modules/module-name type module
+		# A modules/module-name.php type module
 		if (locate_template("modules/$name.php")) {
 			\Sleek\Utils\get_template_part("modules/$name", null, $fields);
 		}
@@ -59,11 +56,15 @@ function render_flexible ($name, $id) {
 			render($moduleName, $module); # TODO: template
 		}
 	}
+	else {
+		# TODO: throw exception? message on the page?
+	}
 }
 
 ####################################
 # Returns all ACF fields for modules
-function get_module_fields (array $modules, $key, $layout = 'tabbed') {
+# $layout can be one of 'flexible', 'tabbed' or 'normal'
+function get_module_fields (array $modules, $key, $layout = 'normal') {
 	$fields = [];
 
 	foreach ($modules as $module) {
@@ -98,13 +99,13 @@ function get_module_fields (array $modules, $key, $layout = 'tabbed') {
 			}
 		}
 
-		# Create module class
+		# Create module class and get fields
 		if (class_exists($fullClassName)) {
 			$obj = new $fullClassName;
 			$moduleFields = $obj->get_fields($key);
 		}
 
-		# And get potential fields
+		# We have fields
 		if ($moduleFields) {
 			$field['sub_fields'] = $moduleFields;
 		}
