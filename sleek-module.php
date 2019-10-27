@@ -72,7 +72,7 @@ abstract class Module {
 			\Sleek\Utils\get_template_part("$modulesPath{$this->moduleName}/$template", null, array_merge($this->data(), $this->templateData));
 		}
 		else {
-			# TODO: Print something even if template is missing, like missing template
+			trigger_error("Sleek\Modules\{$this->className}->render($template): failed opening '$template' for rendering", E_USER_NOTICE);
 		}
 	}
 }

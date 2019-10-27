@@ -25,7 +25,7 @@ add_action('after_setup_theme', function () {
 ######################
 # Render single module
 function render ($name, $fields = [], $template = null) {
-	$className = \Sleek\Utils\convert_case($name, 'camel');
+	$className = \Sleek\Utils\convert_case($name, 'pascal');
 	$fullClassName = "Sleek\Modules\\$className";
 
 	# A modules/module-name/module.php type module
@@ -41,7 +41,7 @@ function render ($name, $fields = [], $template = null) {
 		}
 		# No class and no template
 		else {
-			# TODO: throw exception? message on the page?
+			trigger_error("Sleek\Modules\\render({$className}): module does not exist", E_USER_NOTICE);
 		}
 	}
 }
@@ -57,7 +57,7 @@ function render_flexible ($name, $id) {
 		}
 	}
 	else {
-		# TODO: throw exception? message on the page?
+		trigger_error("Sleek\Modules\\render_flexible($name): no modules found");
 	}
 }
 
@@ -74,12 +74,12 @@ function get_module_fields (array $modules, $key, $layout = 'normal') {
 		$fullClassName = "Sleek\Modules\\$className";
 		$moduleFields = null;
 
-		# TODO: Support for module->fieldConfig (or apply_filters sleek_module_fields_config)
-		$field = [
+		# Create field group
+		$field = apply_filters('sleek_module_field_group', [
 			'name' => $snakeName,
 			'label' => __($label, 'sleek'),
 			'sub_fields' => []
-		];
+		], $module, $key, $layout);
 
 		# Flexible module
 		if ($layout === 'flexible') {
