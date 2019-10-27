@@ -8,7 +8,7 @@ add_action('after_setup_theme', function () {
 
 	foreach (glob($path) as $file) {
 		$pathinfo = pathinfo($file);
-		$className = \Sleek\Utils\convert_case(basename($pathinfo['dirname']), 'camel');
+		$className = \Sleek\Utils\convert_case(basename($pathinfo['dirname']), 'pascal');
 		$fullClassName = "Sleek\Modules\\$className";
 
 		# Include the class
@@ -18,6 +18,9 @@ add_action('after_setup_theme', function () {
 		if (class_exists($fullClassName)) {
 			$obj = new $fullClassName;
 			$obj->created();
+		}
+		else {
+			trigger_error("\Sleek\Modules\create_module($className): module '$className' does not exist", E_USER_WARNING);
 		}
 	}
 });
@@ -41,7 +44,7 @@ function render ($name, $fields = [], $template = null) {
 		}
 		# No class and no template
 		else {
-			trigger_error("Sleek\Modules\\render({$className}): module does not exist", E_USER_NOTICE);
+			trigger_error("Sleek\Modules\\render({$className}): module '$className' does not exist", E_USER_WARNING);
 		}
 	}
 }
@@ -57,7 +60,7 @@ function render_flexible ($name, $id) {
 		}
 	}
 	else {
-		trigger_error("Sleek\Modules\\render_flexible($name): no modules found");
+		trigger_error("Sleek\Modules\\render_flexible($name): no modules found", E_USER_NOTICE);
 	}
 }
 
@@ -70,16 +73,16 @@ function get_module_fields (array $modules, $key, $layout = 'normal') {
 	foreach ($modules as $module) {
 		$snakeName = \Sleek\Utils\convert_case($module, 'snake');
 		$label = \Sleek\Utils\convert_case($module, 'title');
-		$className = \Sleek\Utils\convert_case($module, 'camel');
+		$className = \Sleek\Utils\convert_case($module, 'pascal');
 		$fullClassName = "Sleek\Modules\\$className";
 		$moduleFields = null;
 
 		# Create field group
-		$field = apply_filters('sleek_module_field_group', [
+		$field = [
 			'name' => $snakeName,
 			'label' => __($label, 'sleek'),
 			'sub_fields' => []
-		], $module, $key, $layout);
+		];
 
 		# Flexible module
 		if ($layout === 'flexible') {
@@ -102,7 +105,7 @@ function get_module_fields (array $modules, $key, $layout = 'normal') {
 		# Create module class and get fields
 		if (class_exists($fullClassName)) {
 			$obj = new $fullClassName;
-			$moduleFields = $obj->get_fields($key);
+			$moduleFields = $obj->get_acf_fields($key);
 		}
 
 		# We have fields

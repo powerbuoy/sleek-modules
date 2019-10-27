@@ -22,7 +22,7 @@ abstract class Module {
 		}
 
 		# Get field defaults
-		$defaultFields = $this->get_fields();
+		$defaultFields = $this->fields();
 
 		# Merge passed in templateData with default fields
 		foreach ($defaultFields as $defaultField) {
@@ -41,8 +41,13 @@ abstract class Module {
 	}
 
 	# Returns all fields before they're sent to ACF
-	public function get_fields ($acfKey = null) {
-		return apply_filters('sleek_module_fields', $this->fields());
+	public function get_acf_fields ($acfKey = null) {
+		return $this->fields();
+	}
+
+	# Get a single field
+	public function get_field ($name) {
+		return $this->templateData[$name] ?? null;
 	}
 
 	# Additional template data
@@ -53,11 +58,6 @@ abstract class Module {
 	# Lifecycle hook
 	public function created () {
 
-	}
-
-	# Get a single field
-	public function get_field ($name) {
-		return $this->templateData[$name] ?? null;
 	}
 
 	# Render module
@@ -72,7 +72,7 @@ abstract class Module {
 			\Sleek\Utils\get_template_part("$modulesPath{$this->moduleName}/$template", null, array_merge($this->data(), $this->templateData));
 		}
 		else {
-			trigger_error("Sleek\Modules\{$this->className}->render($template): failed opening '$template' for rendering", E_USER_NOTICE);
+			trigger_error("Sleek\Modules\{$this->className}->render($template): failed opening '$template' for rendering", E_USER_WARNING);
 		}
 	}
 }
