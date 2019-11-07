@@ -52,7 +52,13 @@ function render ($name, $fields = [], $template = null) {
 ###############################
 # Render flexible content field
 function render_flexible ($name, $id) {
-	if ($modules = get_field($name, $id)) {
+	if (!function_exists('get_field')) {
+		trigger_error("get_field() does not exist, have you installed Advanced Custom Fields?", E_USER_WARNING);
+
+		return null;
+	}
+
+	if ($modules = \get_field($name, $id)) {
 		foreach ($modules as $module) {
 			$moduleName = \Sleek\Utils\convert_case($module['acf_fc_layout'], 'kebab');
 
