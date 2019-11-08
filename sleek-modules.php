@@ -58,7 +58,7 @@ function render_flexible ($name, $id) {
 		return null;
 	}
 
-	if ($modules = \get_field($name, $id)) {
+	if ($modules = get_field($name, $id)) {
 		foreach ($modules as $module) {
 			$moduleName = \Sleek\Utils\convert_case($module['acf_fc_layout'], 'kebab');
 

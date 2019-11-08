@@ -18,7 +18,7 @@ abstract class Module {
 		# Set up template data
 		# If not an array it's assumed to be an ACF ID
 		if (!is_array($templateData) and function_exists('get_field')) {
-			$templateData = \get_field($this->snakeName, $templateData) ?? [];
+			$templateData = get_field($this->snakeName, $templateData) ?? [];
 		}
 
 		# Get field defaults
