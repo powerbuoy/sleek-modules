@@ -51,7 +51,9 @@ function render ($name, $fields = [], $template = null) {
 
 ###############################
 # Render flexible content field
-function render_flexible ($name, $id) {
+function render_flexible ($name, $id = null) {
+	$id = $id ?? get_the_ID();
+
 	if (!function_exists('get_field')) {
 		trigger_error("get_field() does not exist, have you installed Advanced Custom Fields?", E_USER_WARNING);
 
@@ -61,13 +63,33 @@ function render_flexible ($name, $id) {
 	if ($modules = get_field($name, $id)) {
 		foreach ($modules as $module) {
 			$moduleName = \Sleek\Utils\convert_case($module['acf_fc_layout'], 'kebab');
+			$template = $module['template'] ?? 'template';
 
-			render($moduleName, $module); # TODO: template
+			render($moduleName, $module, $template);
 		}
 	}
 	else {
 		trigger_error("Sleek\Modules\\render_flexible($name): no modules found", E_USER_NOTICE);
 	}
+}
+
+#################################################
+# Return array of available templates for $module
+function get_module_templates ($module) {
+	$path = get_stylesheet_directory() . '/modules/' . $module . '/*.php';
+	$templates = [];
+
+	foreach (glob($path) as $template) {
+		$pathinfo = pathinfo($template);
+
+		if ($pathinfo['filename'] !== 'module' and substr($pathinfo['filename'], 0, 2) !== '__') {
+			$templates[] = $pathinfo['filename'];
+		}
+	}
+
+	sort($templates);
+
+	return $templates;
 }
 
 ####################################
@@ -90,12 +112,8 @@ function get_module_fields (array $modules, $key, $layout = 'normal') {
 			'sub_fields' => []
 		];
 
-		# Flexible module
-		if ($layout === 'flexible') {
-			# TODO: Add template field (and "HIDDEN" if module->fieldConfig->is_hidable)
-		}
 		# Sticky module
-		else {
+		if ($layout !== 'flexible') {
 			$field['type'] = 'group';
 
 			# With tabs
@@ -104,6 +122,14 @@ function get_module_fields (array $modules, $key, $layout = 'normal') {
 					'name' => $snakeName . '_tab',
 					'label' => $label,
 					'type' => 'tab'
+				];
+			}
+			# Accordion
+			elseif ($layout === 'accordion') {
+				$fields[] = [
+					'name' => $snakeName . '_accordion',
+					'label' => $label,
+					'type' => 'accordion'
 				];
 			}
 		}
@@ -126,6 +152,26 @@ function get_module_fields (array $modules, $key, $layout = 'normal') {
 				'label' => __('No config', 'sleek'),
 				'message' => __('This module requires no configuration.', 'sleek')
 			];
+		}
+
+		# Flexible module - insert templates
+		# TODO: Support for HIDDEN modules??
+		if ($layout === 'flexible' and ($tmp = get_module_templates($module))) {
+			$templates = [];
+
+			foreach ($tmp as $t) {
+				$templates[$t] = \Sleek\Utils\convert_case($t, 'title');
+			}
+
+			if ($templates) {
+				array_unshift($field['sub_fields'], [
+					'name' => 'template',
+					'label' => __('Template', 'sleek'),
+					'type' => 'select',
+					'choices' => $templates,
+					'default_value' => 'template'
+				]);
+			}
 		}
 
 		$fields[] = $field;
