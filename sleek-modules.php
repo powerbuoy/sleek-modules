@@ -163,7 +163,7 @@ function get_module_fields (array $modules, $key, $layout = 'normal') {
 				$templates[$t] = \Sleek\Utils\convert_case($t, 'title');
 			}
 
-			if ($templates) {
+			if (count($templates) > 1) {
 				array_unshift($field['sub_fields'], [
 					'name' => 'template',
 					'label' => __('Template', 'sleek'),
