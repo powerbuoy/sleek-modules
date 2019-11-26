@@ -117,7 +117,7 @@ function get_module_fields (array $modules, $key, $layout = 'normal') {
 			$field['type'] = 'group';
 
 			# With tabs
-			if ($layout === 'tabbed') {
+			if ($layout === 'tabs') {
 				$fields[] = [
 					'name' => $snakeName . '_tab',
 					'label' => $label,
