@@ -68,9 +68,9 @@ function render_flexible ($name, $id = null) {
 			render($moduleName, $module, $template);
 		}
 	}
-	else {
-		trigger_error("Sleek\Modules\\render_flexible($name): no modules found", E_USER_NOTICE);
-	}
+#	else {
+#		trigger_error("Sleek\Modules\\render_flexible($name): no modules found", E_USER_NOTICE);
+#	}
 }
 
 #################################################
