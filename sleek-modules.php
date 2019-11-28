@@ -80,7 +80,12 @@ function get_module_templates ($module) {
 		$pathinfo = pathinfo($template);
 
 		if ($pathinfo['filename'] !== 'module' and substr($pathinfo['filename'], 0, 2) !== '__') {
-			$templates[] = $pathinfo['filename'];
+			$readmePath = get_stylesheet_directory() . '/modules/' . $module . '/README-' . $pathinfo['filename'] . '.md';
+			$templates[] = [
+				'filename' => $pathinfo['filename'],
+				'title' => \Sleek\Utils\convert_case($pathinfo['filename'], 'title'),
+				'readme' => file_exists($readmePath) ? trim(file_get_contents($readmePath)) : null
+			];
 		}
 	}
 
@@ -157,7 +162,7 @@ function get_module_fields (array $modules, $key, $layout = 'normal') {
 			$templates = [];
 
 			foreach ($tmp as $t) {
-				$templates[$t] = \Sleek\Utils\convert_case($t, 'title');
+				$templates[$t['filename']] = $t['title'] . ($t['readme'] ? ' - ' . $t['readme'] : '');
 			}
 
 			if (count($templates) > 1) {
@@ -166,7 +171,8 @@ function get_module_fields (array $modules, $key, $layout = 'normal') {
 					'label' => __('Template', 'sleek'),
 					'type' => 'select',
 					'choices' => $templates,
-					'default_value' => 'template'
+					'default_value' => 'template',
+					'ui' => true
 				]);
 			}
 		}
