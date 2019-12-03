@@ -55,7 +55,7 @@ abstract class Module {
 		return [];
 	}
 
-	# Lifecycle hook
+	# Lifecycle hook - created (called on page load regardless if module is used)
 	public function created () {
 
 	}
