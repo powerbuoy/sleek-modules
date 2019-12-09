@@ -30,13 +30,13 @@ add_action('after_setup_theme', function () {
 function has_module ($module, $area, $id = null) {
 	$id = $id ?? get_the_ID();
 
-	$modules = get_field($area, $id);
+	if ($modules = get_field($area, $id)) {
+		foreach ($modules as $mod) {
+			$moduleName = \Sleek\Utils\convert_case($mod['acf_fc_layout'], 'kebab');
 
-	foreach ($modules as $mod) {
-		$moduleName = \Sleek\Utils\convert_case($mod['acf_fc_layout'], 'kebab');
-
-		if ($moduleName === $module) {
-			return true;
+			if ($moduleName === $module) {
+				return true;
+			}
 		}
 	}
 
