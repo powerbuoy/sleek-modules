@@ -35,6 +35,11 @@ abstract class Module {
 		$this->templateData = $templateData;
 	}
 
+	# Lifecycle hook - created (called on page load regardless if module is used)
+	public function created () {
+
+	}
+
 	# Returns all fields and potential defaults for this module
 	public function fields () {
 		return [];
@@ -48,11 +53,6 @@ abstract class Module {
 	# Additional template data
 	public function data () {
 		return [];
-	}
-
-	# Lifecycle hook - created (called on page load regardless if module is used)
-	public function created () {
-
 	}
 
 	# Render module
