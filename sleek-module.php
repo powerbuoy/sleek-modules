@@ -40,11 +40,6 @@ abstract class Module {
 		return [];
 	}
 
-	# Returns all fields before they're sent to ACF
-	public function get_acf_fields ($acfKey = null) {
-		return $this->fields();
-	}
-
 	# Get a single field
 	public function get_field ($name) {
 		return $this->templateData[$name] ?? null;

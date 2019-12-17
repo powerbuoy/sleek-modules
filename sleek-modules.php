@@ -45,6 +45,7 @@ function has_module ($module, $area, $id = null) {
 
 ######################
 # Render single module
+# TODO: Should fields default to get_the_ID() ??
 function render ($name, $fields = [], $template = null) {
 	$className = \Sleek\Utils\convert_case($name, 'pascal');
 	$fullClassName = "Sleek\Modules\\$className";
@@ -62,7 +63,7 @@ function render ($name, $fields = [], $template = null) {
 		}
 		# No class and no template
 		else {
-			trigger_error("Sleek\Modules\\render({$className}): module '$className' does not exist", E_USER_WARNING);
+			trigger_error("Sleek\Modules\\render({$name}): module '$name' does not exist", E_USER_WARNING);
 		}
 	}
 }
@@ -157,7 +158,7 @@ function get_module_fields (array $modules, $key, $layout = 'normal') {
 		# Create module class and get fields
 		if (class_exists($fullClassName)) {
 			$obj = new $fullClassName;
-			$moduleFields = $obj->get_acf_fields($key);
+			$moduleFields = $obj->fields($key);
 		}
 
 		# We have fields
@@ -200,4 +201,11 @@ function get_module_fields (array $modules, $key, $layout = 'normal') {
 
 	# Generate unique keys for each field
 	return \Sleek\Acf\generate_keys($fields, $key);
+}
+
+######################
+# Render dummy modules
+# TODO
+function render_dummies ($modules) {
+
 }
