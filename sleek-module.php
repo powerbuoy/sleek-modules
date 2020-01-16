@@ -63,7 +63,7 @@ abstract class Module {
 	# Render module
 	public function render ($template = null) {
 		# Work out path to template
-		$template = $template ?? 'template'; # Default to template.php
+		$template = $template ?? $this->get_field('template') ?? 'template'; # Default to template.php
 		$modulesPath = '/modules/';
 		$templatePath = locate_template("$modulesPath{$this->moduleName}/$template.php");
 
