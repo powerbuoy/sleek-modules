@@ -45,7 +45,8 @@ function has_module ($module, $area, $id = null) {
 
 ######################
 # Render single module
-function render ($name, $fields = [], $template = null) {
+function render ($name, $fields = null, $template = null) {
+	$fields = $fields ?? get_the_ID();
 	$className = \Sleek\Utils\convert_case($name, 'pascal');
 	$fullClassName = "Sleek\Modules\\$className";
 
