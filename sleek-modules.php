@@ -120,6 +120,8 @@ function get_module_fields (array $modules, $key, $layout = 'normal') {
 	$fields = [];
 
 	foreach ($modules as $module) {
+		# TODO: Move to get_single_module_fields ?
+		# TODO: Add support for sleek_module_fields-filter to auto-add fields to all modules (like background-color etc)
 		$snakeName = \Sleek\Utils\convert_case($module, 'snake');
 		$label = \Sleek\Utils\convert_case($module, 'title');
 		$className = \Sleek\Utils\convert_case($module, 'pascal');

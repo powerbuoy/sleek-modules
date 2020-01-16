@@ -16,6 +16,11 @@ abstract class Module {
 		$this->moduleName = \Sleek\Utils\convert_case($this->className, 'kebab');
 
 		# Set up template data
+		$this->setTemplateData($templateData);
+	}
+
+	# Set template data before rendering based on default values and passed in
+	public function setTemplateData ($templateData = []) {
 		# If not an array it's assumed to be an ACF ID
 		if (!is_array($templateData) and function_exists('get_field')) {
 			$templateData = get_field($this->snakeName, $templateData) ?? [];
