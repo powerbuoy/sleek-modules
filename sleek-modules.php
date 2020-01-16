@@ -45,7 +45,6 @@ function has_module ($module, $area, $id = null) {
 
 ######################
 # Render single module
-# TODO: Should fields default to get_the_ID() ??
 function render ($name, $fields = [], $template = null) {
 	$className = \Sleek\Utils\convert_case($name, 'pascal');
 	$fullClassName = "Sleek\Modules\\$className";
@@ -70,7 +69,7 @@ function render ($name, $fields = [], $template = null) {
 
 ###############################
 # Render flexible content field
-function render_flexible ($name, $id = null) {
+function render_flexible ($where, $id = null) {
 	$id = $id ?? get_the_ID();
 
 	if (!function_exists('get_field')) {
@@ -79,7 +78,7 @@ function render_flexible ($name, $id = null) {
 		return null;
 	}
 
-	if ($modules = get_field($name, $id)) {
+	if ($modules = get_field($where, $id)) {
 		foreach ($modules as $module) {
 			$moduleName = \Sleek\Utils\convert_case($module['acf_fc_layout'], 'kebab');
 			$template = $module['template'] ?? 'template';
@@ -87,30 +86,6 @@ function render_flexible ($name, $id = null) {
 			render($moduleName, $module, $template);
 		}
 	}
-}
-
-#################################################
-# Return array of available templates for $module
-function get_module_templates ($module) {
-	$path = get_stylesheet_directory() . '/modules/' . $module . '/*.php';
-	$templates = [];
-
-	foreach (glob($path) as $template) {
-		$pathinfo = pathinfo($template);
-
-		if ($pathinfo['filename'] !== 'module' and substr($pathinfo['filename'], 0, 2) !== '__') {
-			$readmePath = get_stylesheet_directory() . '/modules/' . $module . '/README-' . $pathinfo['filename'] . '.md';
-			$templates[] = [
-				'filename' => $pathinfo['filename'],
-				'title' => \Sleek\Utils\convert_case($pathinfo['filename'], 'title'),
-				'readme' => file_exists($readmePath) ? trim(file_get_contents($readmePath)) : null
-			];
-		}
-	}
-
-	sort($templates);
-
-	return $templates;
 }
 
 ####################################
@@ -203,6 +178,30 @@ function get_module_fields (array $modules, $key, $layout = 'normal') {
 
 	# Generate unique keys for each field
 	return \Sleek\Acf\generate_keys($fields, $key);
+}
+
+#################################################
+# Return array of available templates for $module
+function get_module_templates ($module) {
+	$path = get_stylesheet_directory() . '/modules/' . $module . '/*.php';
+	$templates = [];
+
+	foreach (glob($path) as $template) {
+		$pathinfo = pathinfo($template);
+
+		if ($pathinfo['filename'] !== 'module' and substr($pathinfo['filename'], 0, 2) !== '__') {
+			$readmePath = get_stylesheet_directory() . '/modules/' . $module . '/README-' . $pathinfo['filename'] . '.md';
+			$templates[] = [
+				'filename' => $pathinfo['filename'],
+				'title' => \Sleek\Utils\convert_case($pathinfo['filename'], 'title'),
+				'readme' => file_exists($readmePath) ? trim(file_get_contents($readmePath)) : null
+			];
+		}
+	}
+
+	sort($templates);
+
+	return $templates;
 }
 
 ######################
