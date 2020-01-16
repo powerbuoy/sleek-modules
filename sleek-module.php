@@ -19,6 +19,26 @@ abstract class Module {
 		$this->setTemplateData($templateData);
 	}
 
+	# Lifecycle hook - created (called on page load regardless if module is used)
+	public function created () {
+
+	}
+
+	# Returns all fields and potential defaults for this module
+	public function fields () {
+		return [];
+	}
+
+	# Additional template data
+	public function data () {
+		return [];
+	}
+
+	# Get a single field
+	public function get_field ($name) {
+		return $this->templateData[$name] ?? null;
+	}
+
 	# Set template data before rendering based on default values and passed in
 	public function setTemplateData ($templateData = []) {
 		# If not an array it's assumed to be an ACF ID
@@ -38,26 +58,6 @@ abstract class Module {
 
 		# Store for rendering
 		$this->templateData = $templateData;
-	}
-
-	# Lifecycle hook - created (called on page load regardless if module is used)
-	public function created () {
-
-	}
-
-	# Returns all fields and potential defaults for this module
-	public function fields () {
-		return [];
-	}
-
-	# Get a single field
-	public function get_field ($name) {
-		return $this->templateData[$name] ?? null;
-	}
-
-	# Additional template data
-	public function data () {
-		return [];
 	}
 
 	# Render module
