@@ -154,7 +154,7 @@ function get_module_fields (array $modules, $key, $layout = 'normal') {
 
 		# Flexible module - insert templates
 		# TODO: Support for HIDDEN modules??
-		if ($layout === 'flexible' and ($tmp = get_module_templates($module))) {
+		if ($tmp = get_module_templates($module)) {
 			$templates = [];
 
 			foreach ($tmp as $t) {
