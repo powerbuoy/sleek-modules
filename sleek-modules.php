@@ -91,7 +91,7 @@ function render_flexible ($where, $id = null) {
 ####################################
 # Returns all ACF fields for modules
 # $layout can be one of 'flexible', 'tabbed' or 'normal'
-function get_module_fields (array $modules, $key, $layout = 'normal') {
+function get_module_fields (array $modules, $layout = 'normal') {
 	$fields = [];
 
 	foreach ($modules as $module) {
@@ -135,7 +135,7 @@ function get_module_fields (array $modules, $key, $layout = 'normal') {
 		# Create module class and get fields
 		if (class_exists($fullClassName)) {
 			$obj = new $fullClassName;
-			$moduleFields = $obj->fields($key);
+			$moduleFields = $obj->fields();
 		}
 
 		# We have fields
@@ -177,7 +177,7 @@ function get_module_fields (array $modules, $key, $layout = 'normal') {
 	}
 
 	# Generate unique keys for each field
-	return \Sleek\Acf\generate_keys($fields, $key);
+	return $fields;
 }
 
 #################################################
