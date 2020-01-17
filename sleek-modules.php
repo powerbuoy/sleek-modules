@@ -193,7 +193,7 @@ function get_module_templates ($module) {
 			$readmePath = get_stylesheet_directory() . '/modules/' . $module . '/README-' . $pathinfo['filename'] . '.md';
 			$templates[] = [
 				'filename' => $pathinfo['filename'],
-				'title' => \Sleek\Utils\convert_case($pathinfo['filename'], 'title'),
+				'title' => $pathinfo['filename'] === 'template' ? __('Default Template', 'sleek') : \Sleek\Utils\convert_case($pathinfo['filename'], 'title'),
 				'readme' => file_exists($readmePath) ? trim(file_get_contents($readmePath)) : null
 			];
 		}
