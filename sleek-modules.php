@@ -140,7 +140,7 @@ function get_module_fields (array $modules, $layout = 'normal') {
 
 		# We have fields
 		if ($moduleFields) {
-			$field['sub_fields'] = $moduleFields;
+			$field['sub_fields'] = apply_filters('sleek_module_fields', $moduleFields, $module, $layout);
 		}
 		# No fields for this module
 		else {
@@ -152,7 +152,7 @@ function get_module_fields (array $modules, $layout = 'normal') {
 			];
 		}
 
-		# Flexible module - insert templates
+		# Insert module templates
 		# TODO: Support for HIDDEN modules??
 		if ($tmp = get_module_templates($module)) {
 			$templates = [];
@@ -211,7 +211,7 @@ function render_dummies ($modules) {
 		$className = \Sleek\Utils\convert_case($module, 'pascal');
 		$fullClassName = "Sleek\Modules\\$className";
 		$templates = get_module_templates($module);
-		$fields = (new $fullClassName)->fields();
+		$fields = apply_filters('sleek_module_fields', (new $fullClassName)->fields(), $module, null);
 
 		foreach ($templates as $template) {
 			$template = $template['filename'];

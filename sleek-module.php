@@ -16,7 +16,7 @@ abstract class Module {
 		$this->moduleName = \Sleek\Utils\convert_case($this->className, 'kebab');
 
 		# Set up template data
-		$this->setTemplateData($templateData);
+		$this->set_template_data($templateData);
 	}
 
 	# Lifecycle hook - created (called on page load regardless if module is used)
@@ -40,14 +40,14 @@ abstract class Module {
 	}
 
 	# Set template data before rendering based on default values and passed in
-	public function setTemplateData ($templateData = []) {
+	public function set_template_data ($templateData = []) {
 		# If not an array it's assumed to be an ACF ID
 		if (!is_array($templateData) and function_exists('get_field')) {
 			$templateData = get_field($this->snakeName, $templateData) ?? [];
 		}
 
 		# Get field defaults
-		$defaultFields = $this->fields();
+		$defaultFields = apply_filters('sleek_module_fields', $this->fields(), $this->moduleName, null);
 
 		# Merge passed in templateData with default fields
 		foreach ($defaultFields as $defaultField) {
