@@ -91,7 +91,7 @@ function render_flexible ($where, $id = null) {
 ####################################
 # Returns all ACF fields for modules
 # $layout can be one of 'flexible', 'tabbed' or 'normal'
-function get_module_fields (array $modules, $layout = 'normal') {
+function get_module_fields (array $modules, $layout = 'normal', $withTemplates = true) {
 	$fields = [];
 
 	foreach ($modules as $module) {
@@ -154,7 +154,7 @@ function get_module_fields (array $modules, $layout = 'normal') {
 
 		# Insert module templates
 		# TODO: Support for HIDDEN modules??
-		if ($tmp = get_module_templates($module)) {
+		if ($withTemplates and ($tmp = get_module_templates($module))) {
 			$templates = [];
 
 			foreach ($tmp as $t) {
