@@ -43,7 +43,8 @@ abstract class Module {
 	public function set_template_data ($templateData = []) {
 		# If not an array it's assumed to be an ACF ID
 		if (!is_array($templateData) and function_exists('get_field')) {
-			$templateData = get_field($this->snakeName, $templateData) ?? [];
+			$acfData = get_field($this->snakeName, $templateData); # Get the data from ACF
+			$templateData = $acfData ? $acfData : []; # Fall back to empty array (NOTE: Not using ?? because an empty string should also fall back to []) (NOTE 2: An empty string can occur if a field by this name once existed on this ID, for example if posts once had a "next-post" module that was later removed ACF still stores an empty string in the database for some reason) (???)
 		}
 
 		# Get field defaults
