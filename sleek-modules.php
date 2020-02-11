@@ -350,8 +350,27 @@ add_filter('sleek_get_dummy_field/?type=oembed', function ($value, $module, $tem
 }, 10, 4);
 
 # Gallery
-# TODO...
+# TODO: Check return_format, min, max, more?
 add_filter('sleek_get_dummy_field/?type=gallery', function ($value, $module, $template, $field) {
+	# TODO: Limit to images
+	$rows = get_posts([
+		'post_type' => 'attachment',
+		'numberposts' => -1
+	]);
+
+	if ($rows) {
+		shuffle($rows);
+
+		$rows = array_slice($rows, 0, rand(min(count($rows), 2), min(count($rows), 6)));
+		$tmp = [];
+
+		foreach ($rows as $row) {
+			$tmp[] = acf_get_attachment($row->ID);
+		}
+
+		return $tmp;
+	}
+
 	return null;
 }, 10, 4);
 
