@@ -288,13 +288,30 @@ add_filter('sleek_get_dummy_field/?type=password', function ($value, $module, $t
 # Content
 # Image
 add_filter('sleek_get_dummy_field/?type=image', function ($value, $module, $template, $field) {
+	# TODO: Limit to only images (not PDF etc)
+	$rows = get_posts([
+		'post_type' => 'attachment',
+		'numberposts' => -1
+	]);
+
+	if ($rows) {
+		if (isset($field['return_format']) and strtolower($field['return_format']) === 'id') {
+			return $rows[array_rand($rows)]->ID;
+		}
+		elseif (isset($field['return_format']) and strtolower($field['return_format']) === 'url') {
+			# TODO: Return URL
+		}
+		# NOTE: Default to array - is that correct?
+		else {
+			# TODO: Return full image (as wp_get_attachment_image or what? maybe an ACF function is needed)
+		}
+	}
+
 	return null;
 }, 10, 4);
 
 # File
 add_filter('sleek_get_dummy_field/?type=file', function ($value, $module, $template, $field) {
-	$file = null;
-
 	# TODO: Limit to $field['mime_types'] if set
 	$rows = get_posts([
 		'post_type' => 'attachment',
@@ -302,10 +319,10 @@ add_filter('sleek_get_dummy_field/?type=file', function ($value, $module, $templ
 	]);
 
 	if ($rows) {
-		if (isset($field['return_format']) and $field['return_format'] === 'id') {
+		if (isset($field['return_format']) and strtolower($field['return_format']) === 'id') {
 			return $rows[array_rand($rows)]->ID;
 		}
-		elseif (isset($field['return_format']) and $field['return_format'] === 'url') {
+		elseif (isset($field['return_format']) and strtolower($field['return_format']) === 'url') {
 			# TODO: Return URL
 		}
 		# NOTE: Default to array - is that correct?
@@ -314,14 +331,15 @@ add_filter('sleek_get_dummy_field/?type=file', function ($value, $module, $templ
 		}
 	}
 
-	return $file;
+	return null;
 }, 10, 4);
 
 # WYSIWYG
+# TODO: Randomize text, add images, lists, etc
 add_filter('sleek_get_dummy_field/?type=wysiwyg', function ($value, $module, $template, $field) {
 	return '
 		<p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.</p>
-		<p>Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est. Mauris placerat eleifend leo.</p>
+		<p>Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper.</p>
 	';
 }, 10, 4);
 
@@ -340,8 +358,14 @@ add_filter('sleek_get_dummy_field/?type=gallery', function ($value, $module, $te
 ########
 # Choice
 # Select
-# TODO...
+# TODO: Check return_format
 add_filter('sleek_get_dummy_field/?type=select', function ($value, $module, $template, $field) {
+	if (isset($field['choices'])) {
+		$rand = array_rand($field['choices']);
+
+		return \Sleek\Utils\is_sequential_array($field['choices']) ? $field['choices'][$rand] : $rand;
+	}
+
 	return null;
 }, 10, 4);
 
@@ -366,9 +390,15 @@ add_filter('sleek_get_dummy_field/?type=true_false', function ($value, $module, 
 ############
 # Relational
 # Link
-# TODO...
+# TODO: Randomize URLs, targets and more texts (+ return_format?)
 add_filter('sleek_get_dummy_field/?type=link', function ($value, $module, $template, $field) {
-	return null;
+	$texts = [__('Read more', 'sleek'), __('Click here', 'sleek'), __('Contact us', 'sleek')];
+
+	return [
+		'url' => 'https://www.google.com',
+		'target' => '',
+		'title' => $texts[array_rand($texts)]
+	];
 }, 10, 4);
 
 # Post Object
@@ -384,9 +414,30 @@ add_filter('sleek_get_dummy_field/?type=page_link', function ($value, $module, $
 }, 10, 4);
 
 # Relationship
-# TODO...
+# TODO: Check min, max, return_format, more?
 add_filter('sleek_get_dummy_field/?type=relationship', function ($value, $module, $template, $field) {
-	return null;
+	if (isset($field['min']) and isset($field['max'])) {
+		$limit = rand($field['min'], $field['max']);
+	}
+	elseif (isset($field['min'])) {
+		$limit = rand($field['min'], $field['min'] * 2);
+	}
+	elseif (isset($field['max'])) {
+		$limit = rand(ceil($field['max'] / 2), $field['max']);
+	}
+	else {
+		$limit = rand(3, 9);
+	}
+
+	$args = [
+		'numberposts' => $limit
+	];
+
+	if (isset($field['post_type'])) {
+		$args['post_type'] = $field['post_type'];
+	}
+
+	return get_posts($args);
 }, 10, 4);
 
 # Taxonomy
@@ -434,7 +485,7 @@ add_filter('sleek_get_dummy_field/?type=repeater', function ($value, $module, $t
 	$subFields = [];
 
 	# Random number of repeats
-	for ($i = 0; $i < rand(1, 12); $i++) {
+	for ($i = 0; $i < rand(1, 5); $i++) {
 		$subField = [];
 
 		foreach ($field['sub_fields'] as $sField) {
