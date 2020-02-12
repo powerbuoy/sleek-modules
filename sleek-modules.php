@@ -346,7 +346,7 @@ add_filter('sleek_get_dummy_field/?type=wysiwyg', function ($value, $module, $te
 # oEmbed
 # TODO...
 add_filter('sleek_get_dummy_field/?type=oembed', function ($value, $module, $template, $field) {
-	return null;
+	return wp_oembed_get('https://www.youtube.com/watch?v=_T6SGPFTHWU');
 }, 10, 4);
 
 # Gallery
