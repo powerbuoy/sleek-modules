@@ -113,6 +113,9 @@ function get_module_fields (array $modules, $layout = 'normal', $withTemplates =
 		# Sticky module
 		if ($layout !== 'flexible') {
 			$field['type'] = 'group';
+			$field['wrapper'] = [
+				'class' => 'sleek-acf-group'
+			];
 
 			# With tabs
 			if ($layout === 'tabs') {
