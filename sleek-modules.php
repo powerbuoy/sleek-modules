@@ -95,8 +95,7 @@ function get_module_fields (array $modules, $layout = 'normal', $withTemplates =
 	$fields = [];
 
 	foreach ($modules as $module) {
-		# TODO: Move to get_single_module_fields ?
-		# TODO: Add support for sleek_module_fields-filter to auto-add fields to all modules (like background-color etc)
+		# TODO: Move to get_single_module_fields ? yes but without group, tabs etc, only flat fields with templates
 		$snakeName = \Sleek\Utils\convert_case($module, 'snake');
 		$label = \Sleek\Utils\convert_case($module, 'title');
 		$className = \Sleek\Utils\convert_case($module, 'pascal');
@@ -114,7 +113,7 @@ function get_module_fields (array $modules, $layout = 'normal', $withTemplates =
 		if ($layout !== 'flexible') {
 			$field['type'] = 'group';
 			$field['wrapper'] = [
-				'class' => 'sleek-acf-group'
+				'class' => 'sleek-module-group'
 			];
 
 			# With tabs
