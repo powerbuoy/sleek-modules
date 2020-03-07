@@ -19,8 +19,8 @@ abstract class Module {
 		$this->set_template_data($templateData);
 	}
 
-	# Lifecycle hook - created (called on page load regardless if module is used)
-	public function created () {
+	# Lifecycle hook - init (called on page load regardless if module is used)
+	public function init () {
 
 	}
 
@@ -48,7 +48,7 @@ abstract class Module {
 		}
 
 		# Get field defaults
-		$defaultFields = apply_filters('sleek_module_fields', $this->fields(), $this->moduleName, null);
+		$defaultFields = apply_filters('sleek/modules/fields', $this->fields(), $this->moduleName, null);
 
 		# Merge passed in templateData with default fields
 		foreach ($defaultFields as $defaultField) {
