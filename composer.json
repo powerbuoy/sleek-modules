@@ -1,5 +1,6 @@
 {
     "name": "powerbuoy/sleek-modules",
+    "description": "Create modules by creating classes in /modules/.",
     "license": "GPL-2.0-or-later",
     "authors": [
         {

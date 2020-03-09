@@ -1,4 +1,10 @@
-# Sleek Modules
+# [Sleek Modules](https://github.com/powerbuoy/sleek-modules/)
+
+[![Packagist](https://img.shields.io/packagist/vpre/powerbuoy/sleek-modules.svg?style=flat-square)](https://packagist.org/packages/powerbuoy/sleek-modules)
+[![GitHub license](https://img.shields.io/github/license/powerbuoy/sleek-modules.svg?style=flat-square)](https://github.com/powerbuoy/sleek-modules/blob/master/LICENSE)
+[![GitHub issues](https://img.shields.io/github/issues/powerbuoy/sleek-modules.svg?style=flat-square)](https://github.com/powerbuoy/sleek-modules/issues)
+[![GitHub forks](https://img.shields.io/github/forks/powerbuoy/sleek-modules.svg?style=flat-square)](https://github.com/powerbuoy/sleek-modules/network)
+[![GitHub stars](https://img.shields.io/github/stars/powerbuoy/sleek-modules.svg?style=flat-square)](https://github.com/powerbuoy/sleek-modules/stargazers)
 
 Create modules by creating classes in `/modules/`.
 
