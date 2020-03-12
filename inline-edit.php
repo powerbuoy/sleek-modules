@@ -20,7 +20,8 @@ add_action('after_setup_theme', function () {
 
 			acf_form([
 				'id' => 'acf-form-' . $where . '-' . $id,
-				'fields' => [$where]
+				'fields' => [$where],
+				'post_id' => $id
 			]);
 
 			echo '</div>';
@@ -66,7 +67,7 @@ add_action('after_setup_theme', function () {
 				}
 
 				/* Remove flex field actions */
-				div.dialog[id^="dialog-edit-modules-"] .acf-flexible-content .acf-actions {
+				div.dialog[id^="dialog-edit-modules-"] .acf-flexible-content > .acf-actions {
 					display: none;
 				}
 
