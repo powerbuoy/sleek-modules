@@ -22,6 +22,14 @@
 				display: none;
 			}
 
+			/* Full size media modal (because it looks really weird with a modal inside a modal) */
+			.media-modal {
+				left: 0;
+				top: 0;
+				right: 0;
+				bottom: 0;
+			}
+
 			/* Util class */
 			.sleek-modules-inline-edit-hide {
 				display: none;
