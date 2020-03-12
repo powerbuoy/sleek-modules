@@ -2,8 +2,8 @@
 namespace Sleek\Modules;
 
 function get_flexible_module_by_area_index ($area, $index, $postId) {
-	$latestRev = wp_get_post_revisions($postId, ['numberposts' => 1]);
-	$postId = ($latestRev and count($latestRev)) ? array_key_first($latestRev) : $postId;
+	$autosave = wp_get_post_autosave($postId, get_current_user_id());
+	$postId = $autosave ? $autosave->ID : $postId;
 	$modules = get_field($area, $postId);
 	$i = 0;
 
@@ -53,41 +53,51 @@ function preview_flexible_module () {
 
 add_action('admin_head', function () {
 	if (get_theme_support('sleek/modules/module_preview')) {
-		?>
-		<style>
-			.acf-flexible-content .layout .acf-fc-layout-controls .acf-icon.-picture {
-				visibility: hidden;
-			}
+		$currentScreen = get_current_screen();
 
-			.acf-flexible-content .layout:hover .acf-fc-layout-controls .acf-icon.-picture {
-				visibility: visible;
-			}
-		</style>
+		if ($currentScreen->base === 'post') {
+			global $post;
 
-		<script>
-			window.addEventListener('DOMContentLoaded', e => {
-				document.querySelectorAll('div.acf-flexible-content > div.values div.layout').forEach(el => {
-					var postId = document.getElementById('post_ID');
+			?>
+			<style>
+				.acf-flexible-content .layout .acf-fc-layout-controls .acf-icon.-picture {
+					visibility: hidden;
+				}
 
-					if (postId) {
-						postId = postId.value;
+				.acf-flexible-content .layout:hover .acf-fc-layout-controls .acf-icon.-picture {
+					visibility: visible;
+				}
+			</style>
 
-						var controls = el.querySelector('div.acf-fc-layout-controls');
-						var index = el.dataset.id.substring('row-'.length);
-						var data = el.querySelector(':scope > input[type=hidden]').name;
-						var previewButton = document.createElement('a');
-						var matches = data.match(/acf\[(.*?)\]/);
-						var area = matches[1];
+			<script>
+				window.addEventListener('DOMContentLoaded', e => {
+					document.querySelectorAll('div.acf-flexible-content > div.values div.layout').forEach(el => {
+						var postId = document.getElementById('post_ID');
 
-						previewButton.classList.add('acf-icon', '-picture', 'small', 'light', 'acf-js-tooltip', 'thickbox');
-						previewButton.href = '/wp-admin/admin-ajax.php?action=sleek_preview_flexible_module&area=' + area + '&index=' + index + '&post_id=' + postId + '&TB_iframe=true';
-						previewButton.setAttribute('title', 'Preview');
+						if (postId) {
+							postId = postId.value;
 
-						controls.prepend(previewButton);
-					}
+							var controls = el.querySelector('div.acf-fc-layout-controls');
+							var index = el.dataset.id.substring('row-'.length);
+							var data = el.querySelector(':scope > input[type=hidden]').name;
+							var previewButton = document.createElement('a');
+							var matches = data.match(/acf\[(.*?)\]/);
+							var area = matches[1];
+
+							previewButton.classList.add('acf-icon', '-picture', 'small', 'light', 'acf-js-tooltip', 'thickbox');
+							previewButton.href = '/wp-admin/admin-ajax.php?action=sleek_preview_flexible_module&area=' + area + '&index=' + index + '&post_id=' + postId + '&TB_iframe=true';
+
+						//	previewButton.href = '<?php echo get_preview_post_link($post->ID) ?>';
+						//	previewButton.target = 'wp-preview-<?php echo $post->ID ?>';
+
+							previewButton.setAttribute('title', 'Preview');
+
+							controls.prepend(previewButton);
+						}
+					});
 				});
-			});
-		</script>
-		<?php
+			</script>
+			<?php
+		}
 	}
 });
