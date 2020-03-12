@@ -55,6 +55,8 @@ function render ($name, $fields = null, $template = null) {
 
 	# A modules/module-name/module.php type module
 	if (class_exists($fullClassName)) {
+		do_action('sleek/modules/pre_render', $name, $fields, $template);
+
 		$obj = new $fullClassName($fields);
 
 		$obj->render($template);
@@ -62,6 +64,8 @@ function render ($name, $fields = null, $template = null) {
 	else {
 		# A modules/module-name.php type module
 		if (locate_template("modules/$name.php")) {
+			do_action('sleek/modules/pre_render', $name, $fields, $template);
+
 			\Sleek\Utils\get_template_part("modules/$name", null, $fields);
 		}
 		# No class and no template
@@ -83,8 +87,14 @@ function render_flexible ($where, $id = null) {
 	}
 
 	if ($modules = get_field($where, $id)) {
+		do_action('sleek/modules/pre_render_flexible', $where, $id);
+
+		$i = 0;
+
 		foreach ($modules as $module) {
 			$moduleName = \Sleek\Utils\convert_case($module['acf_fc_layout'], 'kebab');
+
+			do_action('sleek/modules/pre_render_flexible_module', $where, $id, $moduleName, $module, $i++);
 
 			render($moduleName, $module);
 		}

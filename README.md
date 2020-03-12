@@ -22,6 +22,18 @@ Filter the ACF fields for modules before they're added. This allows you to add "
 
 Filter dummy data used by `render_dummies()`.
 
+### `sleek/modules/pre_render`
+
+Hook that runs before rendering a single module.
+
+### `sleek/modules/pre_render_flexible`
+
+Hook that runs before rendering an array of flexible modules.
+
+### `sleek/modules/pre_render_flexible_module`
+
+Hook that runs before rendering a single module in an an array of flexible modules.
+
 ## Functions
 
 ### `Sleek\Modules\has_module($module, $area, $id)`
