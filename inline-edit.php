@@ -19,6 +19,7 @@ add_action('after_setup_theme', function () {
 			echo '<h2>Edit Module</h2>';
 
 			acf_form([
+				'id' => 'acf-form-' . $where . '-' . $id,
 				'fields' => [$where]
 			]);
 
