@@ -3,13 +3,13 @@ namespace Sleek\Modules;
 
 # Render ACF form head stuff like CSS/JS etc
 add_action('get_header', function () {
-	if (is_user_logged_in() and !is_admin()) {
+	if (current_user_can('edit_posts') and !is_admin()) {
 		acf_form_head();
 	}
 });
 
 add_action('after_setup_theme', function () {
-	if (is_user_logged_in() and !is_admin()) {
+	if (current_user_can('edit_posts') and !is_admin()) {
 		# jQuery is required for acf form...
 		remove_theme_support('sleek/disable_jquery');
 
