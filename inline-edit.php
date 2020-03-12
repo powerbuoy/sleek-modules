@@ -15,7 +15,7 @@ add_action('after_setup_theme', function () {
 
 		# Render the ACF form above each flexible module field
 		add_action('sleek/modules/pre_render_flexible', function ($where, $id) {
-			echo '<div class="dialog" id="dialog-edit-modules-' . $where . '">';
+			echo '<div class="dialog" id="dialog-edit-modules-' . $where . '-' . $id . '">';
 			echo '<h2>Edit Module</h2>';
 
 			acf_form([
@@ -30,7 +30,7 @@ add_action('after_setup_theme', function () {
 		add_action('sleek/modules/pre_render_flexible_module', function ($where, $id, $module, $data, $index) {
 			?>
 			<nav class="sleek-modules-inline-edit">
-				<a href="#dialog-edit-modules-<?php echo $where ?>"
+				<a href="#dialog-edit-modules-<?php echo $where ?>-<?php echo $id ?>"
 					class="sleek-modules-inline-edit-module"
 					data-dialog-data='<?php echo json_encode(['where' => $where, 'id' => $id, 'module' => $module, 'index' => $index]) ?>'>
 					<?php _e('Edit Module', 'sleek') ?>
@@ -54,7 +54,7 @@ add_action('after_setup_theme', function () {
 				}
 
 				/* Remove first field (the flex field) padding */
-				div.dialog[id^="dialog-edit-modules-"] #acf-form > .acf-fields > .acf-field {
+				div.dialog[id^="dialog-edit-modules-"] form.acf-form > .acf-fields > .acf-field {
 					padding: 0;
 					border: 0;
 				}
