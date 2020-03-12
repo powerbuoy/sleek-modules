@@ -91,6 +91,10 @@
 
 		<?php wp_footer() ?>
 
+		<script>
+			acf.unload.active = false;
+		</script>
+
 		<?php if (isset($_GET['updated'])) : ?>
 			<script>
 				window.parent.postMessage({sleekModulesInlineEditUpdated: true}, '<?php echo home_url() ?>');
