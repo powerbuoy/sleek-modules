@@ -2,6 +2,8 @@
 namespace Sleek\Modules;
 
 function get_flexible_module_by_area_index ($area, $index, $postId) {
+	$latestRev = wp_get_post_revisions($postId, ['numberposts' => 1]);
+	$postId = ($latestRev and count($latestRev)) ? array_key_first($latestRev) : $postId;
 	$modules = get_field($area, $postId);
 	$i = 0;
 
@@ -32,15 +34,15 @@ function preview_flexible_module () {
 			?>
 			<!DOCTYPE html>
 			<html <?php language_attributes() ?> <?php body_class() ?>>
-			<head>
-			<?php wp_head() ?>
-			</head>
-			<body>
-			<?php
-			render($moduleName, $module);
-			?>
-			<?php wp_footer() ?>
-			</body>
+				<head>
+					<?php wp_head() ?>
+				</head>
+				<body>
+					<?php
+					render($moduleName, $module);
+					?>
+					<?php wp_footer() ?>
+				</body>
 			</html>
 			<?php
 		}
