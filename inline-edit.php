@@ -18,16 +18,17 @@ add_action('after_setup_theme', function () {
 
 			# Render the ACF form above each flexible module field
 			add_action('sleek/modules/pre_render_flexible', function ($where, $id) {
-				echo '<div class="dialog" id="dialog-edit-modules-' . $where . '-' . $id . '">';
-				echo '<h2>Edit Module</h2>';
-
-				acf_form([
-					'id' => 'acf-form-' . $where . '-' . $id,
-					'fields' => [$where],
-					'post_id' => $id
-				]);
-
-				echo '</div>';
+				?>
+				<div class="dialog" id="dialog-edit-modules-<?php echo $where ?>-<?php echo $id ?>">
+					<?php
+						acf_form([
+							'id' => 'acf-form-' . $where . '-' . $id,
+							'fields' => [$where],
+							'post_id' => $id
+						]);
+					?>
+				</div>
+				<?php
 			}, 10, 2);
 
 			# Render an edit button above each module
