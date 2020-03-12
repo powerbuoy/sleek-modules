@@ -34,24 +34,7 @@ add_action('after_setup_theme', function () {
 					data-dialog-data='<?php echo json_encode(['where' => $where, 'id' => $id, 'module' => $module, 'index' => $index]) ?>'>
 					<?php _e('Edit Module', 'sleek') ?>
 				</a>
-				<a href="#dialog-module-info-<?php echo $module ?>">
-					<?php _e('Show Module Info', 'sleek') ?>
-				</a>
 			</nav>
-			<div id="dialog-module-info-<?php echo $module ?>" class="dialog">
-				<h2><?php echo $module ?></h2>
-				<dl>
-					<dt><?php _e('Post ID') ?></dt>
-					<dd><?php echo $id ?></dd>
-
-					<dt><?php _e('Module area') ?></dt>
-					<dd><?php echo $where ?></dd>
-
-					<dt><?php _e('Index') ?></dt>
-					<dd><?php echo $index ?></dd>
-				</dl>
-				<pre><?php var_dump($data) ?></pre>
-			</div>
 			<?php
 		}, 10, 5);
 
