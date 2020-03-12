@@ -17,6 +17,15 @@
 				margin: 0;
 			}
 
+			/* Hide admin bar :P */
+			#wpadminbar {
+				display: none;
+			}
+
+			html {
+				margin-top: 0 !important;
+			}
+
 			/* This style isn't added by acf_form_head() */
 			.screen-reader-text {
 				display: none;
