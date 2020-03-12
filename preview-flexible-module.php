@@ -52,40 +52,42 @@ function preview_flexible_module () {
 }
 
 add_action('admin_head', function () {
-	?>
-	<style>
-		.acf-flexible-content .layout .acf-fc-layout-controls .acf-icon.-picture {
-			visibility: hidden;
-		}
+	if (get_theme_support('sleek/modules/module_preview')) {
+		?>
+		<style>
+			.acf-flexible-content .layout .acf-fc-layout-controls .acf-icon.-picture {
+				visibility: hidden;
+			}
 
-		.acf-flexible-content .layout:hover .acf-fc-layout-controls .acf-icon.-picture {
-			visibility: visible;
-		}
-	</style>
+			.acf-flexible-content .layout:hover .acf-fc-layout-controls .acf-icon.-picture {
+				visibility: visible;
+			}
+		</style>
 
-	<script>
-		window.addEventListener('DOMContentLoaded', e => {
-			document.querySelectorAll('div.acf-flexible-content > div.values div.layout').forEach(el => {
-				var postId = document.getElementById('post_ID');
+		<script>
+			window.addEventListener('DOMContentLoaded', e => {
+				document.querySelectorAll('div.acf-flexible-content > div.values div.layout').forEach(el => {
+					var postId = document.getElementById('post_ID');
 
-				if (postId) {
-					postId = postId.value;
+					if (postId) {
+						postId = postId.value;
 
-					var controls = el.querySelector('div.acf-fc-layout-controls');
-					var index = el.dataset.id.substring('row-'.length);
-					var data = el.querySelector(':scope > input[type=hidden]').name;
-					var previewButton = document.createElement('a');
-					var matches = data.match(/acf\[(.*?)\]/);
-					var area = matches[1];
+						var controls = el.querySelector('div.acf-fc-layout-controls');
+						var index = el.dataset.id.substring('row-'.length);
+						var data = el.querySelector(':scope > input[type=hidden]').name;
+						var previewButton = document.createElement('a');
+						var matches = data.match(/acf\[(.*?)\]/);
+						var area = matches[1];
 
-					previewButton.classList.add('acf-icon', '-picture', 'small', 'light', 'acf-js-tooltip', 'thickbox');
-					previewButton.href = '/wp-admin/admin-ajax.php?action=sleek_preview_flexible_module&area=' + area + '&index=' + index + '&post_id=' + postId + '&TB_iframe=true';
-					previewButton.setAttribute('title', 'Preview');
+						previewButton.classList.add('acf-icon', '-picture', 'small', 'light', 'acf-js-tooltip', 'thickbox');
+						previewButton.href = '/wp-admin/admin-ajax.php?action=sleek_preview_flexible_module&area=' + area + '&index=' + index + '&post_id=' + postId + '&TB_iframe=true';
+						previewButton.setAttribute('title', 'Preview');
 
-					controls.prepend(previewButton);
-				}
+						controls.prepend(previewButton);
+					}
+				});
 			});
-		});
-	</script>
-	<?php
+		</script>
+		<?php
+	}
 });

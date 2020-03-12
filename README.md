@@ -10,7 +10,13 @@ Create modules by creating classes in `/modules/`.
 
 ## Theme Support
 
-N/A
+### `sleek/modules/inline_edit`
+
+Enable inline editing of flexible modules.
+
+### `sleek/modules/module_preview`
+
+Enable module preview in admin.
 
 ## Hooks
 
