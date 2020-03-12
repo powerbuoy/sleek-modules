@@ -1,4 +1,5 @@
 <?php
+# https://wordpress.stackexchange.com/questions/218588/post-preview-mechanism-architecture
 namespace Sleek\Modules;
 
 function get_flexible_module_by_area_index ($area, $index, $postId) {
