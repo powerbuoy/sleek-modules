@@ -48,6 +48,11 @@ add_action('after_setup_theme', function () {
 			add_action('wp_head', function () {
 				?>
 				<style>
+					/* This style isn't added by acf_form_head() */
+					.screen-reader-text {
+						display: none;
+					}
+
 					/* Hide messages */
 					div.dialog[id^="dialog-edit-modules-"] #message {
 						display: none;
