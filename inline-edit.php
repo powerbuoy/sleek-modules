@@ -49,13 +49,50 @@ add_action('after_setup_theme', function () {
 					width: 100%;
 					height: 70vh;
 				}
+
+				.sleek-modules-inline-edit-dialog {
+					--dialog-width: 60rem;
+				}
 			</style>
 			<?php
 		});
 
+		add_action('sleek/modules/pre_render_flexible', function ($where, $id) {
+			?>
+			<div class="dialog sleek-modules-inline-edit-dialog" id="dialog-sleek-modules-inline-edit-<?php echo $where ?>-<?php echo $id ?>">
+				<iframe class="sleek-modules-inline-edit-iframe"></iframe>
+			</div>
+			<?php
+		}, 10, 2);
+
+		add_action('sleek/modules/pre_render_flexible_module', function ($where, $id, $module, $data, $index) {
+			?>
+			<nav class="sleek-modules-inline-edit">
+				<a href="#dialog-sleek-modules-inline-edit-<?php echo $where ?>-<?php echo $id ?>"
+					class="sleek-modules-inline-edit-module"
+					data-dialog-data='<?php echo json_encode(['area' => $where, 'post_id' => $id, 'index' => $index]) ?>'>
+					<?php _e('Edit Module', 'sleek') ?>
+				</a>
+			</nav>
+			<?php
+		}, 10, 5);
+
 		add_action('wp_footer', function () {
 			?>
 			<script>
+				window.addEventListener('sleek-ui-dialog-trigger-open', function (e) {
+					if (e.detail && e.detail.data) {
+						var dialog = e.detail.dialog;
+						var data = JSON.parse(e.detail.data);
+						var iframe = dialog.querySelector('iframe');
+						var src = '<?php echo home_url('/sleek-modules-inline-edit/') ?>' + data.area + '/' + data.post_id + '/' + data.index + '/';
+
+						if (iframe && iframe.src !== src) {
+							iframe.src = src;
+						}
+					}
+				});
+
 				window.addEventListener('message', function (e) {
 					if (e.origin === '<?php echo home_url() ?>' && e.data && e.data.sleekModulesInlineEditUpdated === true) {
 						window.location.reload();
@@ -64,19 +101,5 @@ add_action('after_setup_theme', function () {
 			</script>
 			<?php
 		});
-
-		add_action('sleek/modules/pre_render_flexible_module', function ($where, $id, $module, $data, $index) {
-			?>
-			<div class="dialog dialog--large" id="dialog-sleek-modules-inline-edit-<?php echo $where ?>-<?php echo $id ?>-<?php echo $index ?>">
-				<iframe src="<?php echo home_url("/sleek-modules-inline-edit/$where/$id/$index/") ?>" class="sleek-modules-inline-edit-iframe"></iframe>
-			</div>
-
-			<nav class="sleek-modules-inline-edit">
-				<a href="#dialog-sleek-modules-inline-edit-<?php echo $where ?>-<?php echo $id ?>-<?php echo $index ?>" class="sleek-modules-inline-edit-module">
-					<?php _e('Edit Module', 'sleek') ?>
-				</a>
-			</nav>
-			<?php
-		}, 10, 5);
 	}
 });
