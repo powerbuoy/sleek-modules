@@ -13,7 +13,7 @@ add_action('init', function () {
 		});
 
 		add_rewrite_rule(
-			'^sleek-modules-inline-edit/([^/]+)/([^/]+)/([^/]+)/?$',
+			'^__SLEEK__/modules/inline-edit/([^/]+)/([^/]+)/([^/]+)/?$',
 			'index.php?sleek_modules_inline_edit_area=$matches[1]&sleek_modules_inline_edit_post_id=$matches[2]&sleek_modules_inline_edit_index=$matches[3]',
 			'top'
 		);
@@ -22,122 +22,128 @@ add_action('init', function () {
 			global $wp_query;
 
 			if (isset($wp_query->query_vars['sleek_modules_inline_edit_area'])) {
-				# Enable jQuery
-				remove_theme_support('sleek/disable_jquery');
+				if (!current_user_can('edit_posts')) {
+					status_header(404); # Sets 404 header
+					$wp_query->set_404(); # Shows 404 template
+				}
+				else {
+					# Enable jQuery
+					remove_theme_support('sleek/disable_jquery');
 
-				# Disable sleek styling
-				add_action('wp_enqueue_scripts', function () {
-					wp_dequeue_style('sleek');
-					wp_dequeue_script('sleek');
-					wp_dequeue_script('sleek_google_maps');
-				}, 99);
+					# Disable sleek styling
+					add_action('wp_enqueue_scripts', function () {
+						wp_dequeue_style('sleek');
+						wp_dequeue_script('sleek');
+						wp_dequeue_script('sleek_google_maps');
+					}, 99);
 
-				# Render form
-				?>
-				<?php acf_form_head() ?>
-				<!DOCTYPE html>
-				<html <?php language_attributes() ?> <?php body_class() ?>>
-					<head>
-						<?php wp_head() ?>
-						<style>
-							body {
-								color: #444;
-								font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif;
-								font-size: 13px;
-								line-height: 1.4em;
-								margin: 0;
-							}
+					# Render form
+					?>
+					<?php acf_form_head() ?>
+					<!DOCTYPE html>
+					<html <?php language_attributes() ?> <?php body_class() ?>>
+						<head>
+							<?php wp_head() ?>
+							<style>
+								body {
+									color: #444;
+									font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif;
+									font-size: 13px;
+									line-height: 1.4em;
+									margin: 0;
+								}
 
-							/* Hide admin bar :P */
-							#wpadminbar {
-								display: none;
-							}
+								/* Hide admin bar :P */
+								#wpadminbar {
+									display: none;
+								}
 
-							html {
-								margin-top: 0 !important;
-							}
+								html {
+									margin-top: 0 !important;
+								}
 
-							/* This style isn't added by acf_form_head() */
-							.screen-reader-text {
-								display: none;
-							}
+								/* This style isn't added by acf_form_head() */
+								.screen-reader-text {
+									display: none;
+								}
 
-							/* Full size media modal (because it looks really weird with a modal inside a modal) */
-							div.media-modal {
-								left: 0;
-								top: 0;
-								right: 0;
-								bottom: 0;
-							}
+								/* Full size media modal (because it looks really weird with a modal inside a modal) */
+								div.media-modal {
+									left: 0;
+									top: 0;
+									right: 0;
+									bottom: 0;
+								}
 
-							/* Util class */
-							.sleek-modules-inline-edit-hide {
-								display: none;
-							}
+								/* Util class */
+								.sleek-modules-inline-edit-hide {
+									display: none;
+								}
 
-							/* Remove first field (the flex field) padding */
-							form.acf-form > .acf-fields > .acf-field {
-								padding: 0;
-								border: 0;
-							}
+								/* Remove first field (the flex field) padding */
+								form.acf-form > .acf-fields > .acf-field {
+									padding: 0;
+									border: 0;
+								}
 
-							/* Never collapse layouts */
-							.acf-flexible-content .layout.-collapsed > .acf-fields,
-							.acf-flexible-content .layout.-collapsed > .acf-table {
-								display: block;
-							}
+								/* Never collapse layouts */
+								.acf-flexible-content .layout.-collapsed > .acf-fields,
+								.acf-flexible-content .layout.-collapsed > .acf-table {
+									display: block;
+								}
 
-							/* Remove flex field actions */
-							.acf-flexible-content > .acf-actions {
-								display: none;
-							}
+								/* Remove flex field actions */
+								.acf-flexible-content > .acf-actions {
+									display: none;
+								}
 
-							/* Remove border from layouts */
-							.acf-flexible-content .values .layout {
-								margin: 0;
-								border: 0;
-								display: none;
-							}
+								/* Remove border from layouts */
+								.acf-flexible-content .values .layout {
+									margin: 0;
+									border: 0;
+									display: none;
+								}
 
-							.acf-flexible-content .values .layout[data-id="row-<?php echo $wp_query->query_vars['sleek_modules_inline_edit_index'] ?>"] {
-								display: block;
-							}
+								.acf-flexible-content .values .layout[data-id="row-<?php echo $wp_query->query_vars['sleek_modules_inline_edit_index'] ?>"] {
+									display: block;
+								}
 
-							/* Hide layout handle and controls */
-							.acf-flexible-content .values .layout .acf-fc-layout-handle,
-							.acf-flexible-content .values .layout .acf-fc-layout-controls {
-								display: none;
-							}
+								/* Hide layout handle and controls */
+								.acf-flexible-content .values .layout .acf-fc-layout-handle,
+								.acf-flexible-content .values .layout .acf-fc-layout-controls {
+									display: none;
+								}
 
-							/* Remove side padding and border from inner fields */
-							.acf-flexible-content .values .layout .acf-fields > .acf-field {
-								padding-left: 0;
-								padding-right: 0;
-								border: 0;
-							}
-						</style>
-					</head>
-					<body>
-						<?php
-							acf_form([
-								'id' => 'acf-form-' . $wp_query->query_vars['sleek_modules_inline_edit_area'] . '-' . $wp_query->query_vars['sleek_modules_inline_edit_post_id'],
-								'fields' => [$wp_query->query_vars['sleek_modules_inline_edit_area']],
-								'post_id' => $wp_query->query_vars['sleek_modules_inline_edit_post_id']
-							]);
-						?>
-						<?php wp_footer() ?>
-						<script>
-							acf.unload.active = false;
-						</script>
-						<?php if (isset($_GET['updated'])) : ?>
+								/* Remove side padding and border from inner fields */
+								.acf-flexible-content .values .layout .acf-fields > .acf-field {
+									padding-left: 0;
+									padding-right: 0;
+									border: 0;
+								}
+							</style>
+						</head>
+						<body>
+							<?php
+								acf_form([
+									'id' => 'acf-form-' . $wp_query->query_vars['sleek_modules_inline_edit_area'] . '-' . $wp_query->query_vars['sleek_modules_inline_edit_post_id'],
+									'fields' => [$wp_query->query_vars['sleek_modules_inline_edit_area']],
+									'post_id' => $wp_query->query_vars['sleek_modules_inline_edit_post_id']
+								]);
+							?>
+							<?php wp_footer() ?>
 							<script>
-								window.parent.postMessage({sleekModulesInlineEditUpdated: true}, '<?php echo home_url() ?>');
+								acf.unload.active = false;
 							</script>
-						<?php endif ?>
-					</body>
-				</html>
-				<?php
-				exit;
+							<?php if (isset($_GET['updated'])) : ?>
+								<script>
+									window.parent.postMessage({sleekModulesInlineEditUpdated: true}, '<?php echo home_url() ?>');
+								</script>
+							<?php endif ?>
+						</body>
+					</html>
+					<?php
+					exit;
+				}
 			}
 		});
 	}
@@ -194,7 +200,7 @@ add_action('after_setup_theme', function () {
 						var dialog = e.detail.dialog;
 						var data = JSON.parse(e.detail.data);
 						var iframe = dialog.querySelector('iframe');
-						var src = '<?php echo home_url('/sleek-modules-inline-edit/') ?>' + data.area + '/' + data.post_id + '/' + data.index + '/';
+						var src = '<?php echo home_url('/__SLEEK__/modules/inline-edit/') ?>' + data.area + '/' + data.post_id + '/' + data.index + '/';
 
 						if (iframe && iframe.src !== src) {
 							iframe.src = src;
