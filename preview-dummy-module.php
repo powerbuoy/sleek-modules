@@ -21,9 +21,15 @@ add_action('init', function () {
 		if (isset($wp_query->query_vars['sleek_modules_preview_dummy_module_module'])) {
 			?>
 			<!DOCTYPE html>
-			<html <?php language_attributes() ?> <?php body_class() ?>>
+			<html <?php language_attributes() ?> <?php body_class('prefers-reduced-motion') ?>>
 				<head>
 					<?php wp_head() ?>
+					<style>
+						#wpadminbar,
+						#cookie-consent {
+							display: none;
+						}
+					</style>
 					<meta name="robots" content="noindex,nofollow">
 				</head>
 				<body>
@@ -37,6 +43,7 @@ add_action('init', function () {
 				</body>
 			</html>
 			<?php
+
 			exit;
 		}
 	});

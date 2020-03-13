@@ -41,7 +41,7 @@ add_action('init', function () {
 					?>
 					<?php acf_form_head() ?>
 					<!DOCTYPE html>
-					<html <?php language_attributes() ?> <?php body_class() ?>>
+					<html <?php language_attributes() ?> <?php body_class('prefers-reduced-motion') ?>>
 						<head>
 							<?php wp_head() ?>
 							<style>
@@ -53,8 +53,9 @@ add_action('init', function () {
 									margin: 0;
 								}
 
-								/* Hide admin bar :P */
-								#wpadminbar {
+								/* Hide admin bar and cookie consent */
+								#wpadminbar,
+								#cookie-consent {
 									display: none;
 								}
 

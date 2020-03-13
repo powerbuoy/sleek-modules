@@ -54,9 +54,15 @@ add_action('init', function () {
 					$moduleName = \Sleek\Utils\convert_case($module['acf_fc_layout'], 'snake');
 					?>
 					<!DOCTYPE html>
-					<html <?php language_attributes() ?> <?php body_class() ?>>
+					<html <?php language_attributes() ?> <?php body_class('prefers-reduced-motion') ?>>
 						<head>
 							<?php wp_head() ?>
+							<style>
+								#wpadminbar,
+								#cookie-consent {
+									display: none;
+								}
+							</style>
 							<meta name="robots" content="noindex,nofollow">
 						</head>
 						<body>
