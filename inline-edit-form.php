@@ -32,7 +32,7 @@
 			}
 
 			/* Full size media modal (because it looks really weird with a modal inside a modal) */
-			.media-modal {
+			div.media-modal {
 				left: 0;
 				top: 0;
 				right: 0;
