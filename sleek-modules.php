@@ -2,7 +2,7 @@
 namespace Sleek\Modules;
 
 require_once __DIR__ . '/inline-edit-flex-module.php';
-require_once __DIR__ . '/preview-flexible-module.php';
+require_once __DIR__ . '/preview-flex-module.php';
 require_once __DIR__ . '/render-dummies.php';
 
 ###################################
