@@ -23,6 +23,23 @@ function render_dummies ($modules) {
 	}
 }
 
+#########################
+# Render one dummy module
+function render_dummy ($module, $template) {
+	$className = \Sleek\Utils\convert_case($module, 'pascal');
+	$fullClassName = "Sleek\Modules\\$className";
+	$fields = apply_filters('sleek/modules/fields', (new $fullClassName)->fields(), $module, null);
+	$data = [];
+
+	foreach ($fields as $field) {
+		$data[$field['name']] = render_dummies_apply_filters(null, $module, $template, $field);
+	}
+
+	render($module, $data, $template);
+}
+
+######################################
+# Helper function to apply all filters
 function render_dummies_apply_filters ($value, $module, $template, $field) {
 	$value = apply_filters('sleek/modules/get_dummy_field/?type=' . $field['type'] . '&name=' . $field['name'] . '&module=' . $module, null, $module, $template, $field) ??
 			apply_filters('sleek/modules/get_dummy_field/?type=' . $field['type'] . '&name=' . $field['name'], null, $module, $template, $field) ??
