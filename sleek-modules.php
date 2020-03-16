@@ -106,6 +106,7 @@ function render_flexible ($where, $id = null) {
 ####################################
 # Returns all ACF fields for modules
 # $layout can be one of 'flexible', 'tabs', 'accordion', or 'normal'
+# TODO: Should be Module->get_acf_field() ??
 function get_module_fields (array $modules, $layout = 'normal', $withTemplates = true) {
 	$fields = [];
 
@@ -199,6 +200,7 @@ function get_module_fields (array $modules, $layout = 'normal', $withTemplates =
 
 #################################################
 # Return array of available templates for $module
+# TODO: Should be Module->get_templates()
 function get_module_templates ($module) {
 	$path = get_stylesheet_directory() . '/modules/' . $module . '/*.php';
 	$templates = [];
@@ -208,10 +210,13 @@ function get_module_templates ($module) {
 
 		if ($pathinfo['filename'] !== 'module' and substr($pathinfo['filename'], 0, 2) !== '__') {
 			$readmePath = get_stylesheet_directory() . '/modules/' . $module . '/README-' . $pathinfo['filename'] . '.md';
+			$screenshotPath = get_stylesheet_directory() . '/modules/' . $module . '/' . $pathinfo['filename'] . '.png';
+			$screenshotUrl = get_stylesheet_directory_uri() . '/modules/' . $module . '/' . $pathinfo['filename'] . '.png';
 			$templates[] = [
 				'filename' => $pathinfo['filename'],
 				'title' => $pathinfo['filename'] === 'template' ? __('Default Template', 'sleek') : \Sleek\Utils\convert_case($pathinfo['filename'], 'title'),
-				'readme' => file_exists($readmePath) ? trim(file_get_contents($readmePath)) : null
+				'readme' => file_exists($readmePath) ? trim(file_get_contents($readmePath)) : null,
+				'screenshot' => file_exists($screenshotPath) ? $screenshotUrl : null
 			];
 		}
 	}
