@@ -1,6 +1,7 @@
 <?php
 namespace Sleek\Modules;
 
+require_once __DIR__ . '/add-new-module-preview.php';
 require_once __DIR__ . '/inline-edit-flex-module.php';
 require_once __DIR__ . '/preview-dummy-module.php';
 require_once __DIR__ . '/preview-flex-module.php';
