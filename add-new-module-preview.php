@@ -103,6 +103,10 @@ add_action('admin_head', function () {
 				font-size: 14px;
 				font-weight: normal;
 			}
+
+			div.acf-fc-popup ul li a p + p {
+				margin-top: 0;
+			}
 		</style>
 		<?php
 	}
@@ -114,31 +118,48 @@ add_action('admin_footer', function () {
 		<script>
 			var moduleData = <?php echo json_encode(get_module_data()) ?>;
 
-			document.querySelectorAll('a.acf-button[data-name="add-layout"]').forEach(function (button) {
-				button.addEventListener('mouseup', function (e) {
+			document.querySelectorAll('a[data-name="add-layout"]').forEach(function (button) {
+				button.addEventListener('click', function (e) {
+					// NOTE: Wait for popup to render
 					setTimeout(function () {
+						// Go through every acf-fc-popup element (there should only be one)
 						document.querySelectorAll('div.acf-fc-popup').forEach(function (popup) {
-							var modules = popup.querySelectorAll('li');
-
-							modules.forEach(function (mod) {
+							// First insert additional templates
+							popup.querySelectorAll('li').forEach(function (mod) {
 								var link = mod.querySelector('a');
 								var moduleName = link.dataset.layout || null;
 								var moduleInfo = moduleData[moduleName] || null;
+								var linkHTML = mod.innerHTML;
+
+								link.setAttribute('data-template', 'template');
+
+								// TODO
+								if (false && moduleInfo.templates) {
+									moduleInfo.templates.forEach(function (template) {
+										if (template.filename !== 'template') {
+											var templateLi = document.createElement('li');
+
+											templateLi.innerHTML = linkHTML;
+
+											var templateLink = templateLi.querySelector('a');
+
+											templateLink.innerText += ' (' + template.title + ')';
+
+											templateLink.setAttribute('data-template', template.filename);
+											mod.parentNode.insertBefore(templateLi, mod.nextSibling);
+										}
+									});
+								}
+							});
+
+							// Now insert additional data to all links
+							popup.querySelectorAll('li').forEach(function (mod) {
+								var link = mod.querySelector('a');
+								var moduleName = link.dataset.layout || null;
+								var moduleInfo = moduleData[moduleName] || null;
+								var linkHTML = mod.innerHTML;
 
 								if (moduleInfo) {
-									console.dir(moduleInfo);
-
-									var screenshot = document.createElement('figure');
-
-									if (moduleInfo.screenshot) {
-										screenshot.innerHTML = '<img src="' + moduleInfo.screenshot + '">';
-									}
-									else {
-										screenshot.innerHTML = '<img src="https://placehold.it/800x800?text=' + moduleInfo.title + '">';
-									}
-
-									link.prepend(screenshot);
-
 									if (moduleInfo.readme) {
 										var readme = document.createElement('p');
 
@@ -146,7 +167,37 @@ add_action('admin_footer', function () {
 
 										link.appendChild(readme);
 									}
+
+									var screenshot = document.createElement('figure');
+									var src = 'https://placehold.it/800x800?text=' + moduleInfo.title;
+
+									if (link.dataset.template && moduleInfo.templates) {
+										moduleInfo.templates.forEach(function (template) {
+											if (template.filename === link.dataset.template) {
+												if (template.screenshot) {
+													src = template.screenshot;
+												}
+
+												if (template.readme) {
+													var readme = document.createElement('p');
+
+													readme.innerHTML = template.readme;
+
+													link.appendChild(readme);
+												}
+											}
+										});
+									}
+
+									screenshot.innerHTML = '<img src="' + src + '">';
+
+									link.prepend(screenshot);
 								}
+
+								// TODO: Select the correct template
+							/*	link.addEventListener('click', function () {
+									console.log('Adding module ' + link.dataset.layout + ' with template ' + link.dataset.template);
+								}); */
 							});
 						});
 					}, 50); // NOTE: Wait for popup to render
