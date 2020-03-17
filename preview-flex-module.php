@@ -4,11 +4,6 @@ namespace Sleek\Modules;
 
 # Return module at index from area/postId
 function get_flexible_module_by_area_index ($area, $postId, $index) {
-	# TODO: Sometimes the latest revision is actually _older_ than the post itself!?
-	$latestRev = wp_get_post_revisions($postId, ['numberposts' => 1]);
-	$postId = ($latestRev and count($latestRev)) ? array_key_first($latestRev) : $postId;
-#	$autosave = wp_get_post_autosave($postId, get_current_user_id());
-#	$postId = $autosave ? $autosave->ID : $postId;
 	$modules = get_field($area, $postId);
 	$i = 0;
 
