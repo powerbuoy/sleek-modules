@@ -2,6 +2,7 @@
 namespace Sleek\Modules;
 
 require_once __DIR__ . '/add-new-module-preview.php';
+require_once __DIR__ . '/global-modules.php';
 require_once __DIR__ . '/inline-edit-flex-module.php';
 require_once __DIR__ . '/preview-dummy-module.php';
 require_once __DIR__ . '/preview-flex-module.php';
@@ -154,12 +155,12 @@ function get_module_fields (array $modules, $layout = 'normal', $withTemplates =
 		# Create module class and get fields
 		if (class_exists($fullClassName)) {
 			$obj = new $fullClassName;
-			$moduleFields = $obj->fields();
+			$moduleFields = $obj->filtered_fields();
 		}
 
 		# We have fields
 		if ($moduleFields) {
-			$field['sub_fields'] = apply_filters('sleek/modules/fields', $moduleFields, $module, $layout);
+			$field['sub_fields'] = $moduleFields;
 		}
 		# No fields for this module
 		else {

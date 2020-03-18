@@ -8,7 +8,7 @@ function render_dummies ($modules) {
 		$className = \Sleek\Utils\convert_case($module, 'pascal');
 		$fullClassName = "Sleek\Modules\\$className";
 		$templates = get_module_templates($module);
-		$fields = apply_filters('sleek/modules/fields', (new $fullClassName)->fields(), $module, null);
+		$fields = (new $fullClassName)->filtered_fields();
 
 		foreach ($templates as $template) {
 			$template = $template['filename'];
@@ -28,7 +28,7 @@ function render_dummies ($modules) {
 function render_dummy ($module, $template) {
 	$className = \Sleek\Utils\convert_case($module, 'pascal');
 	$fullClassName = "Sleek\Modules\\$className";
-	$fields = apply_filters('sleek/modules/fields', (new $fullClassName)->fields(), $module, null);
+	$fields = (new $fullClassName)->filtered_fields();
 	$data = [];
 
 	foreach ($fields as $field) {
