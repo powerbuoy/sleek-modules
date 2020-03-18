@@ -296,9 +296,36 @@ add_filter('sleek/modules/dummy_field_value', function ($value, $field, $module,
 	}
 
 	# User
-	# TODO...
+	# TODO: return_format and more probably
 	elseif ($field['type'] === 'user') {
-		return null;
+		$rows = get_users();
+		$return = [];
+
+		if ($rows) {
+			shuffle($rows);
+			$rows = array_slice($rows, 0, rand(min(count($rows), 2), min(count($rows), 6)));
+
+			if (isset($field['return_format']) and strtolower($field['return_format']) === 'id') {
+				$rows = array_map(function ($row) {
+					return $row->ID;
+				}, $rows);
+			}
+			elseif (isset($field['return_format']) and strtolower($field['return_format']) === 'object') {
+				# Do nothing, it's already an object
+			}
+			# Default to array
+			else {
+				$rows = array_map(function ($row) {
+					return (array) $row->data;
+				}, $rows);
+			}
+		}
+
+		if (!isset($field['multiple']) or $field['multiple'] === false) {
+			$rows = $rows[0];
+		}
+
+		return $rows;
 	}
 
 	########
@@ -306,7 +333,10 @@ add_filter('sleek/modules/dummy_field_value', function ($value, $field, $module,
 	# Google Map
 	# TODO...
 	elseif ($field['type'] === 'google_map') {
-		return null;
+		return [
+			'lat' => '40.6974034',
+			'lng' => '-74.1197633'
+		];
 	}
 
 	# Date Picker
