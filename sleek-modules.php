@@ -8,7 +8,7 @@ require_once __DIR__ . '/preview-dummy-module.php';
 require_once __DIR__ . '/preview-flex-module.php';
 require_once __DIR__ . '/render-dummies.php';
 
-###################################
+################################
 # Run all modules' init callback
 add_action('after_setup_theme', function () {
 	$path = get_stylesheet_directory() . '/modules/**/module.php';
@@ -62,7 +62,6 @@ function render ($name, $fields = null, $template = null) {
 		do_action('sleek/modules/pre_render', $name, $fields, $template);
 
 		$obj = new $fullClassName($fields);
-
 		$obj->render($template);
 	}
 	else {
