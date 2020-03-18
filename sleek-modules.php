@@ -80,7 +80,7 @@ function render ($name, $fields = null, $template = null) {
 
 ###############################
 # Render flexible content field
-function render_flexible ($where, $id = null) {
+function render_flexible ($area, $id = null) {
 	$id = $id ?? get_the_ID();
 
 	if (!function_exists('get_field')) {
@@ -89,17 +89,16 @@ function render_flexible ($where, $id = null) {
 		return;
 	}
 
-	if ($modules = get_field($where, $id)) {
-		do_action('sleek/modules/pre_render_flexible', $where, $id);
+	if ($modules = get_field($area, $id)) {
+		do_action('sleek/modules/pre_render_flexible', $area, $id);
 
 		$i = 0;
 
-		foreach ($modules as $module) {
-			$moduleName = \Sleek\Utils\convert_case($module['acf_fc_layout'], 'kebab');
+		foreach ($modules as $moduleData) {
+			$moduleName = \Sleek\Utils\convert_case($moduleData['acf_fc_layout'], 'kebab');
 
-			do_action('sleek/modules/pre_render_flexible_module', $where, $id, $moduleName, $module, $i++);
-
-			render($moduleName, $module);
+			do_action('sleek/modules/pre_render_flexible_module', $area, $id, $moduleName, $moduleData, $i++);
+			render($moduleName, $moduleData);
 		}
 	}
 }
