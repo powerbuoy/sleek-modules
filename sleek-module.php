@@ -77,10 +77,10 @@ abstract class Module {
 	public function render ($template = null) {
 		# Work out path to template
 		$template = $template ?? $this->get_field('template') ?? 'template'; # Default to template.php
-		$templatePath = "$modulesPath{$this->moduleName}/$template.php";
+		$templatePath = "modules/{$this->moduleName}/$template";
 
 		# We found a template to render the module
-		if (locate_template($templatePath)) {
+		if (locate_template("$templatePath.php")) {
 			\Sleek\Utils\get_template_part($templatePath, null, array_merge($this->data(), $this->templateData));
 		}
 		else {
