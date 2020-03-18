@@ -22,35 +22,6 @@ abstract class Module {
 	# Lifecycle hook - init (called on page load regardless if module is used)
 	public function init () {}
 
-	# Returns all fields and potential defaults for this module
-	public function fields () {
-		return [];
-	}
-
-	# Returns $this->fields() but passed through a filter with potential $args
-	public function filtered_fields ($args = null) {
-		$filteredFields = apply_filters('sleek/modules/fields', $this->fields(), $this->moduleName, $args);
-
-		# Make sure filter didn't fuck up fields array
-		if (!is_array($filteredFields)) {
-			trigger_error("Sleek\Modules\\{$this->className}->filtered_fields(): The filter 'sleek/modules/fields' did not return an array", E_USER_WARNING);
-
-			$filteredFields = [];
-		}
-
-		return $filteredFields;
-	}
-
-	# Additional template data
-	public function data () {
-		return [];
-	}
-
-	# Get a single field
-	public function get_field ($name) {
-		return $this->templateData[$name] ?? null;
-	}
-
 	# Set template data before rendering based on default values and passed in
 	public function set_template_data ($templateData = []) {
 		# If not an array it's assumed to be an ACF ID
@@ -71,6 +42,35 @@ abstract class Module {
 
 		# Store for rendering
 		$this->templateData = $templateData;
+	}
+
+	# Returns $this->fields() but passed through a filter with potential $args
+	public function filtered_fields ($args = null) {
+		$filteredFields = apply_filters('sleek/modules/fields', $this->fields(), $this->moduleName, $args);
+
+		# Make sure filter didn't fuck up fields array
+		if (!is_array($filteredFields)) {
+			trigger_error("Sleek\Modules\\{$this->className}->filtered_fields(): The filter 'sleek/modules/fields' did not return an array", E_USER_WARNING);
+
+			$filteredFields = [];
+		}
+
+		return $filteredFields;
+	}
+
+	# Returns all fields and potential defaults for this module
+	public function fields () {
+		return [];
+	}
+
+	# Additional template data
+	public function data () {
+		return [];
+	}
+
+	# Get a single field
+	public function get_field ($name) {
+		return $this->templateData[$name] ?? null;
 	}
 
 	# Render module
