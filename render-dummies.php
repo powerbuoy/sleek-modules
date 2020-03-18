@@ -152,8 +152,8 @@ add_filter('sleek/modules/get_dummy_field/?type=file', function ($value, $module
 # TODO: Randomize text, add images, lists, etc
 add_filter('sleek/modules/get_dummy_field/?type=wysiwyg', function ($value, $module, $template, $field) {
 	return '
-		<p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.</p>
-		<p>Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper.</p>
+		<p>Lorem ipsum dolor sit amet. Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est. Mauris placerat eleifend leo.</p>
+		<p>Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.</p>
 	';
 }, 10, 4);
 
