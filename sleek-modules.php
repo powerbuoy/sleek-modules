@@ -27,28 +27,10 @@ add_action('after_setup_theme', function () {
 			$obj->init();
 		}
 		else {
-			trigger_error("\Sleek\Modules\create_module($className): module '$className' does not exist", E_USER_WARNING);
+			trigger_error("\Sleek\Modules\create_module($className): module '$className' does not exist even though the file does: '$file'", E_USER_WARNING);
 		}
 	}
 });
-
-######################################
-# Checks whether module exists in area
-function has_module ($module, $area, $id = null) {
-	$id = $id ?? get_the_ID();
-
-	if ($modules = get_field($area, $id)) {
-		foreach ($modules as $mod) {
-			$moduleName = \Sleek\Utils\convert_case($mod['acf_fc_layout'], 'kebab');
-
-			if ($moduleName === $module) {
-				return true;
-			}
-		}
-	}
-
-	return false;
-}
 
 ######################
 # Render single module
