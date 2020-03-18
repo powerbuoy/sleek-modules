@@ -42,14 +42,20 @@ function render_dummy ($module, $template) {
 
 # All dummy data
 add_filter('sleek/modules/dummy_field_value', function ($value, $field, $module, $template, $level) {
-	#######
-	# Basic
-	# Text Title
-	# TODO: Check prepend/append
+	#########
+	# Special
+	# Module Title
 	if ($field['type'] === 'text' and $field['name'] === 'title' and $level === 1) {
-		return \Sleek\Utils\convert_case($module, 'title') . ': ' . $template;
+		return \Sleek\Utils\convert_case($module, 'title') . ' <small>' . $template . '</small>';
 	}
 
+	# Module Description
+	if ($field['type'] === 'wysiwyg' and $field['name'] === 'description' and $level === 1 and file_exists(get_stylesheet_directory() . '/modules/' . $module . '/README.md')) {
+		return wpautop(file_get_contents(get_stylesheet_directory() . '/modules/' . $module . '/README.md'));
+	}
+
+	#######
+	# Basic
 	# Text
 	# TODO: Check prepend/append
 	elseif ($field['type'] === 'text') {
