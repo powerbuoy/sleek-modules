@@ -18,7 +18,9 @@ function render_dummies ($modules) {
 				$data[$field['name']] = render_dummies_apply_filters(null, $module, $template, $field);
 			}
 
+			do_action('sleek/modules/render_dummies/pre_render_module', $module, $data, $template);
 			render($module, $data, $template);
+			do_action('sleek/modules/render_dummies/post_render_module', $module, $data, $template);
 		}
 	}
 }
