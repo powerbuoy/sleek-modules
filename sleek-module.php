@@ -49,24 +49,18 @@ abstract class Module {
 	}
 
 	# Render module
-	public function render ($data = [], $template = null) {
-		# If data is not an array it's assumed to be an ACF ID
-		if (!is_array($data) and function_exists('get_field')) {
-			$acfData = get_field($this->snakeName, $data); # Get the data from ACF
-			$data = $acfData ? $acfData : []; # Fall back to empty array (NOTE: Not using ?? because an empty string should also fall back to []) (NOTE 2: An empty string can occur if a field by this name once existed on this ID, for example if posts once had a "next-post" module that was later removed ACF still stores an empty string in the database for some reason) (???)
-		}
-
+	public function render ($template = null, array $data = []) {
 		# Get field defaults
 		$defaultFields = $this->filtered_fields();
 
-		# Merge passed in templateData with default fields
+		# Merge passed in data with default fields
 		foreach ($defaultFields as $defaultField) {
 			if (isset($defaultField['name']) and !isset($data[$defaultField['name']])) {
 				$data[$defaultField['name']] = $defaultField['default_value'] ?? null;
 			}
 		}
 
-		# Store for rendering NOTE: and before calling $this->data() which might use $this->get_field()
+		# Store for rendering (NOTE: and before calling $this->data() which might use $this->get_field())
 		$this->templateData = $data;
 
 		# Work out path to template (NOTE: Uses $this->get_field() so needs to happen after templateData is set)

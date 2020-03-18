@@ -54,6 +54,7 @@ function has_module ($module, $area, $id = null) {
 # Render single module
 function render ($name, $fields = null, $template = null) {
 	$fields = $fields ?? get_the_ID();
+	$snakeName = \Sleek\Utils\convert_case($name, 'snake');
 	$className = \Sleek\Utils\convert_case($name, 'pascal');
 	$fullClassName = "Sleek\Modules\\$className";
 
@@ -61,8 +62,25 @@ function render ($name, $fields = null, $template = null) {
 	if (class_exists($fullClassName)) {
 		do_action('sleek/modules/pre_render', $name, $fields, $template);
 
+		# If data is not an array it's assumed to be an ACF ID
+		if (!is_array($fields)) {
+			$acfData = null;
+
+			if (function_exists('get_field')) {
+				$acfData = get_field($snakeName, $fields);
+			}
+
+			# Fall back to empty array
+			# (NOTE: Not using ?? because an empty string should also fall back to [])
+			# (NOTE 2: An empty string can occur if a field by this name once existed on this ID,
+			# for example if posts once had a "next-post" module that was later removed
+			# ACF still stores an empty string in the database for some reason) (???)
+			$fields = $acfData ? $acfData : [];
+		}
+
+		# Create and render the module
 		$obj = new $fullClassName;
-		$obj->render($fields, $template);
+		$obj->render($template, $fields);
 	}
 	else {
 		# A modules/module-name.php type module
