@@ -141,7 +141,12 @@ add_filter('sleek/modules/get_dummy_field/?type=file', function ($value, $module
 		}
 		# NOTE: Default to array - is that correct?
 		else {
-			return acf_get_attachment($rows[array_rand($rows)]->ID);
+			if (function_exists('acf_get_attachment')) {
+				return acf_get_attachment($rows[array_rand($rows)]->ID);
+			}
+			else {
+				trigger_error("sleek/modules/get_dummy_field/?type=file: acf_get_attachment() is not defined (have you enabled ACF?), unable to return value", E_USER_WARNING);
+			}
 		}
 	}
 
@@ -164,7 +169,7 @@ add_filter('sleek/modules/get_dummy_field/?type=oembed', function ($value, $modu
 }, 10, 4);
 
 # Gallery
-# TODO: Check return_format, min, max, more?
+# TODO: Check min, max, more?
 add_filter('sleek/modules/get_dummy_field/?type=gallery', function ($value, $module, $template, $field) {
 	# TODO: Limit to images
 	$rows = get_posts([
@@ -179,7 +184,18 @@ add_filter('sleek/modules/get_dummy_field/?type=gallery', function ($value, $mod
 		$tmp = [];
 
 		foreach ($rows as $row) {
-			$tmp[] = acf_get_attachment($row->ID);
+			if (function_exists('acf_get_attachment')) {
+				$tmp[] = acf_get_attachment($row->ID);
+			}
+			else {
+				$tmp[] = [
+					'id' => $row->ID,
+					'url' => wp_get_attachment_url($row->ID),
+					'title' => get_the_title($row->ID),
+					'caption' => wp_get_attachment_caption($row->ID),
+					'description' => get_post_field('content', $row->ID)
+				];
+			}
 		}
 
 		return $tmp;
