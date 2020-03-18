@@ -61,8 +61,8 @@ function render ($name, $fields = null, $template = null) {
 	if (class_exists($fullClassName)) {
 		do_action('sleek/modules/pre_render', $name, $fields, $template);
 
-		$obj = new $fullClassName($fields);
-		$obj->render($template);
+		$obj = new $fullClassName;
+		$obj->render($fields, $template);
 	}
 	else {
 		# A modules/module-name.php type module
