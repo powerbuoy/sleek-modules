@@ -108,7 +108,6 @@ function render_flexible ($where, $id = null) {
 ####################################
 # Returns all ACF fields for modules
 # $layout can be one of 'flexible', 'tabs', 'accordion', or 'normal'
-# TODO: Should be Module->get_acf_field() ??
 function get_module_fields (array $modules, $layout = 'normal', $withTemplates = true) {
 	$fields = [];
 
