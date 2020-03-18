@@ -20,13 +20,25 @@ abstract class Module {
 	}
 
 	# Lifecycle hook - init (called on page load regardless if module is used)
-	public function init () {
-
-	}
+	public function init () {}
 
 	# Returns all fields and potential defaults for this module
 	public function fields () {
 		return [];
+	}
+
+	# Returns $this->fields() but passed through a filter with potential $args
+	public function filtered_fields ($args = null) {
+		$filteredFields = apply_filters('sleek/modules/fields', $this->fields(), $this->moduleName, $args);
+
+		# Make sure filter didn't fuck up fields array
+		if (!is_array($filteredFields)) {
+			trigger_error("Sleek\Modules\\{$this->className}->filtered_fields(): The filter 'sleek/modules/fields' did not return an array", E_USER_WARNING);
+
+			$filteredFields = [];
+		}
+
+		return $filteredFields;
 	}
 
 	# Additional template data
@@ -48,7 +60,7 @@ abstract class Module {
 		}
 
 		# Get field defaults
-		$defaultFields = apply_filters('sleek/modules/fields', $this->fields(), $this->moduleName, null);
+		$defaultFields = $this->filtered_fields();
 
 		# Merge passed in templateData with default fields
 		foreach ($defaultFields as $defaultField) {
@@ -65,15 +77,14 @@ abstract class Module {
 	public function render ($template = null) {
 		# Work out path to template
 		$template = $template ?? $this->get_field('template') ?? 'template'; # Default to template.php
-		$modulesPath = '/modules/';
-		$templatePath = locate_template("$modulesPath{$this->moduleName}/$template.php");
+		$templatePath = "$modulesPath{$this->moduleName}/$template.php";
 
 		# We found a template to render the module
-		if ($templatePath) {
-			\Sleek\Utils\get_template_part("$modulesPath{$this->moduleName}/$template", null, array_merge($this->data(), $this->templateData));
+		if (locate_template($templatePath)) {
+			\Sleek\Utils\get_template_part($templatePath, null, array_merge($this->data(), $this->templateData));
 		}
 		else {
-			trigger_error("Sleek\Modules\\{$this->className}->render($template): failed opening '$template' for rendering", E_USER_WARNING);
+			trigger_error("Sleek\Modules\{$this->className}->render($template): failed opening '$template' for rendering", E_USER_WARNING);
 		}
 	}
 }
