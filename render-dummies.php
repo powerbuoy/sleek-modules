@@ -46,7 +46,10 @@ add_filter('sleek/modules/dummy_field_value', function ($value, $field, $module,
 	# Special
 	# Module Title
 	if ($field['type'] === 'text' and $field['name'] === 'title' and $level === 1) {
-		return \Sleek\Utils\convert_case($module, 'title') . ' <small>' . $template . '</small>';
+		$moduleTitle =	__(\Sleek\Utils\convert_case($module, 'title'), 'sleek');
+		$templateTitle = $template === 'template' ? __('Default Template', 'sleek') : __(\Sleek\Utils\convert_case($template, 'title'), 'sleek');
+
+		return "$moduleTitle <small>$templateTitle</small>";
 	}
 
 	# Module Description
