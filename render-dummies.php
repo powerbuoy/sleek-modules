@@ -313,7 +313,7 @@ add_filter('sleek/modules/dummy_field_value', function ($value, $field, $module,
 			elseif (isset($field['return_format']) and strtolower($field['return_format']) === 'object') {
 				# Do nothing, it's already an object
 			}
-			# Default to array
+			# Default to array TODO: This is not the same array as ACF returns :(
 			else {
 				$rows = array_map(function ($row) {
 					return (array) $row->data;
