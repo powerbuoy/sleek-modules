@@ -37,6 +37,14 @@ add_action('init', function () {
 						wp_dequeue_script('sleek_google_maps');
 					}, 99);
 
+					# Fetch the module we're editing
+					$module = get_flexible_module_by_area_index(
+						$wp_query->query_vars['sleek_modules_inline_edit_area'],
+						$wp_query->query_vars['sleek_modules_inline_edit_post_id'],
+						$wp_query->query_vars['sleek_modules_inline_edit_index']
+					);
+					$moduleTitle = isset($module['acf_fc_layout']) ? \Sleek\Utils\convert_case($module['acf_fc_layout'], 'title') : null;
+
 					# Render form
 					?>
 					<?php acf_form_head() ?>
@@ -45,6 +53,7 @@ add_action('init', function () {
 						<head>
 							<?php wp_head() ?>
 							<style>
+								/* Mimic WP admin */
 								body {
 									color: #444;
 									font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif;
@@ -54,13 +63,13 @@ add_action('init', function () {
 								}
 
 								/* Hide admin bar and cookie consent */
+								html {
+									margin-top: 0 !important;
+								}
+
 								#wpadminbar,
 								#cookie-consent {
 									display: none;
-								}
-
-								html {
-									margin-top: 0 !important;
 								}
 
 								/* This style isn't added by acf_form_head() */
@@ -124,6 +133,9 @@ add_action('init', function () {
 							</style>
 						</head>
 						<body>
+							<?php if ($moduleTitle) : ?>
+								<h1><?php printf(__('Edit %s', 'sleek'), $moduleTitle) ?></h1>
+							<?php endif ?>
 							<?php
 								acf_form([
 									'id' => 'acf-form-' . $wp_query->query_vars['sleek_modules_inline_edit_area'] . '-' . $wp_query->query_vars['sleek_modules_inline_edit_post_id'],
