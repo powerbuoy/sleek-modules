@@ -46,7 +46,7 @@ add_action('init', function () {
 				);
 
 				if ($module and isset($module['acf_fc_layout'])) {
-					$moduleName = \Sleek\Utils\convert_case($module['acf_fc_layout'], 'snake');
+					$moduleName = \Sleek\Utils\convert_case($module['acf_fc_layout'], 'kebab');
 					?>
 					<!DOCTYPE html>
 					<html <?php language_attributes() ?> <?php body_class('prefers-reduced-motion') ?>>
