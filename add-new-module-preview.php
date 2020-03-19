@@ -41,7 +41,7 @@ add_action('admin_head', function () {
 
 				width: 80vw;
 				max-width: 80rem;
-				max-height: 80vw;
+				max-height: 80vh;
 				overflow: auto;
 
 				margin: 0 !important;
