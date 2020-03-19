@@ -3,7 +3,7 @@
 namespace Sleek\Modules;
 
 # Return module at index from area/postId
-function get_flexible_module_by_area_index ($area, $postId, $index) {
+function get_flexible_module_by_area_index ($area, int $postId, int $index) {
 	$modules = get_field($area, $postId);
 	$i = 0;
 
@@ -41,8 +41,8 @@ add_action('init', function () {
 			if (isset($wp_query->query_vars['sleek_modules_preview_flex_module_area'])) {
 				$module = get_flexible_module_by_area_index(
 					$wp_query->query_vars['sleek_modules_preview_flex_module_area'],
-					(int) $wp_query->query_vars['sleek_modules_preview_flex_module_post_id'],
-					(int) $wp_query->query_vars['sleek_modules_preview_flex_module_index']
+					$wp_query->query_vars['sleek_modules_preview_flex_module_post_id'],
+					$wp_query->query_vars['sleek_modules_preview_flex_module_index']
 				);
 
 				if ($module and isset($module['acf_fc_layout'])) {
