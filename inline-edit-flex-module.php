@@ -186,7 +186,7 @@ add_action('after_setup_theme', function () {
 				<a href="#dialog-sleek-modules-inline-edit-<?php echo $where ?>-<?php echo $id ?>"
 					class="sleek-modules-inline-edit-module"
 					data-dialog-data='<?php echo json_encode(['area' => $where, 'post_id' => $id, 'index' => $index]) ?>'>
-					<?php _e('Edit Module', 'sleek') ?>
+					<?php printf(__('Edit %s', 'sleek'), \Sleek\Utils\convert_case($module, 'title')) ?>
 				</a>
 			</nav>
 			<?php
