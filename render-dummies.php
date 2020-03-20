@@ -85,19 +85,19 @@ add_filter('sleek/modules/dummy_field_value', function ($value, $field, $module,
 	# Email
 	# TODO...
 	elseif ($field['type'] === 'email') {
-		return null;
+		return 'me@mydomain.com';
 	}
 
 	# URL
 	# TODO...
 	elseif ($field['type'] === 'url') {
-		return null;
+		return 'https://www.google.com';
 	}
 
 	# Password
 	# TODO...
 	elseif ($field['type'] === 'password') {
-		return null;
+		return 'password';
 	}
 
 	#########
@@ -145,9 +145,6 @@ add_filter('sleek/modules/dummy_field_value', function ($value, $field, $module,
 			else {
 				if (function_exists('acf_get_attachment')) {
 					return acf_get_attachment($rows[array_rand($rows)]->ID);
-				}
-				else {
-					trigger_error("sleek/modules/get_dummy_field/?type=file: acf_get_attachment() is not defined (have you enabled ACF?), unable to return value", E_USER_WARNING);
 				}
 			}
 		}
