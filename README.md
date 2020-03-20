@@ -62,10 +62,6 @@ Render flexible modules contained in flexible content area `$where` using (optio
 
 Fetch ACF fields for all `$modules` and use layout `$layout` (`tabs`, `accordion`, `normal` or `flexible`). Optionally give every module group a `Template` dropdown using `$withTemplates = true`.
 
-### `Sleek\Modules\get_module_templates($module)`
-
-Return all templates for `$module`.
-
 ### `Sleek\Modules\render_dummies(array $modules)`
 
 Render all `$modules` using dummy data.

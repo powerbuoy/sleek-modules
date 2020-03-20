@@ -14,6 +14,10 @@ abstract class Module {
 		$this->className = (new \ReflectionClass($this))->getShortName(); # https://coderwall.com/p/cpxxxw/php-get-class-name-without-namespace;
 		$this->snakeName = \Sleek\Utils\convert_case($this->className, 'snake');
 		$this->moduleName = \Sleek\Utils\convert_case($this->className, 'kebab');
+
+		# Store paths
+		$this->path = get_stylesheet_directory() . '/modules/' . $this->moduleName;
+		$this->uri = get_stylesheet_directory_uri() . '/modules/' . $this->moduleName;
 	}
 
 	# Lifecycle hook - init (called on page load regardless if module is used)
@@ -75,5 +79,49 @@ abstract class Module {
 		else {
 			trigger_error("Sleek\Modules\{$this->className}->render($template): failed opening '$template' for rendering", E_USER_WARNING);
 		}
+	}
+
+	# Return array of templates for this module
+	public function templates () {
+		$path = $this->path . '/*.php';
+		$templates = [];
+
+		foreach (glob($path) as $template) {
+			$filename = pathinfo($template)['filename'];
+
+			if ($filename !== 'module' and substr($filename, 0, 2) !== '__') {
+				$readmePath = "{$this->path}/$filename.md";
+				$screenshotPath = "{$this->path}/$filename.png";
+				$screenshotUrl = "{$this->uri}/$filename.png";
+
+				$templates[] = [
+					'filename' => $filename,
+					'title' => $filename === 'template' ? __('Default Template', 'sleek') : \Sleek\Utils\convert_case($filename, 'title'),
+					'readme' => file_exists($readmePath) ? trim(file_get_contents($readmePath)) : null,
+					'screenshot' => file_exists($screenshotPath) ? $screenshotUrl : null
+				];
+			}
+		}
+
+		sort($templates);
+
+		return $templates;
+	}
+
+	# Return meta data about module
+	public function meta () {
+		$readmePath = $this->path . '/README.md';
+		$screenshotPath = $this->path . '/template.png';
+		$screenshotUrl = $this->uri . '/template.png';
+
+		$title = \Sleek\Utils\convert_case($this->moduleName, 'title');
+		$titlePlural = \Sleek\Utils\convert_case($this->moduleName, 'plural');
+
+		return [
+			'title' => $title,
+			'title_plural' => $titlePlural,
+			'readme' => file_exists($readmePath) ? file_get_contents($readmePath) : null,
+			'screenshot' => file_exists($screenshotPath) ? $screenshotUrl : null
+		];
 	}
 }

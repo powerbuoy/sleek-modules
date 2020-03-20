@@ -5,10 +5,10 @@ namespace Sleek\Modules;
 # Render dummy modules
 function render_dummies ($modules) {
 	foreach ($modules as $module) {
-		$className = \Sleek\Utils\convert_case($module, 'pascal');
-		$fullClassName = "Sleek\Modules\\$className";
-		$templates = get_module_templates($module);
-		$fields = (new $fullClassName)->filtered_fields();
+		$fullClassName = "Sleek\Modules\\" . \Sleek\Utils\convert_case($module, 'pascal');
+		$mod = new $fullClassName;
+		$templates = $mod->templates();;
+		$fields = $mod->filtered_fields();
 
 		foreach ($templates as $template) {
 			$template = $template['filename'];
@@ -28,8 +28,7 @@ function render_dummies ($modules) {
 #########################
 # Render one dummy module
 function render_dummy ($module, $template) {
-	$className = \Sleek\Utils\convert_case($module, 'pascal');
-	$fullClassName = "Sleek\Modules\\$className";
+	$fullClassName = "Sleek\Modules\\" . \Sleek\Utils\convert_case($module, 'pascal');
 	$fields = (new $fullClassName)->filtered_fields();
 	$data = [];
 

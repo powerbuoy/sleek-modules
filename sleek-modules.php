@@ -14,8 +14,8 @@ add_action('after_setup_theme', function () {
 	$path = get_stylesheet_directory() . '/modules/**/module.php';
 
 	foreach (glob($path) as $file) {
-		$pathinfo = pathinfo($file);
-		$className = \Sleek\Utils\convert_case(basename($pathinfo['dirname']), 'pascal');
+		$moduleName = basename(dirname($file));
+		$className = \Sleek\Utils\convert_case($moduleName, 'pascal');
 		$fullClassName = "Sleek\Modules\\$className";
 
 		# Include the class
@@ -23,8 +23,8 @@ add_action('after_setup_theme', function () {
 
 		# Create instance of class and run callback
 		if (class_exists($fullClassName)) {
-			$obj = new $fullClassName;
-			$obj->init();
+			$mod = new $fullClassName;
+			$mod->init();
 		}
 		else {
 			trigger_error("\Sleek\Modules\create_module($className): module '$className' does not exist even though the file does: '$file'", E_USER_WARNING);
@@ -61,8 +61,8 @@ function render ($name, $fields = null, $template = null) {
 		}
 
 		# Create and render the module
-		$obj = new $fullClassName;
-		$obj->render($template, $fields);
+		$mod = new $fullClassName;
+		$mod->render($template, $fields);
 	}
 	else {
 		# A modules/module-name.php type module
@@ -150,9 +150,12 @@ function get_module_fields (array $modules, $layout = 'normal', $withTemplates =
 		}
 
 		# Create module class and get fields
+		$templates = null;
+
 		if (class_exists($fullClassName)) {
-			$obj = new $fullClassName;
-			$moduleFields = $obj->filtered_fields();
+			$mod = new $fullClassName;
+			$moduleFields = $mod->filtered_fields();
+			$templates = $mod->templates();
 		}
 
 		# We have fields
@@ -171,19 +174,19 @@ function get_module_fields (array $modules, $layout = 'normal', $withTemplates =
 
 		# Insert module templates
 		# TODO: Support for HIDDEN modules??
-		if ($withTemplates and ($tmp = get_module_templates($module))) {
-			$templates = [];
+		if ($withTemplates and $templates) {
+			$cleanTemplates = [];
 
-			foreach ($tmp as $t) {
-				$templates[$t['filename']] = $t['title'] . ($t['readme'] ? ' - ' . $t['readme'] : '');
+			foreach ($templates as $t) {
+				$cleanTemplates[$t['filename']] = $t['title'] . ($t['readme'] ? ' - ' . $t['readme'] : '');
 			}
 
-			if (count($templates) > 1) {
+			if (count($cleanTemplates) > 1) {
 				array_unshift($field['sub_fields'], [
 					'name' => 'template',
 					'label' => __('Template', 'sleek'),
 					'type' => 'select',
-					'choices' => $templates,
+					'choices' => $cleanTemplates,
 					'default_value' => 'template',
 					'ui' => true
 				]);
@@ -193,34 +196,5 @@ function get_module_fields (array $modules, $layout = 'normal', $withTemplates =
 		$fields[] = $field;
 	}
 
-	# Generate unique keys for each field
 	return $fields;
-}
-
-#################################################
-# Return array of available templates for $module
-# TODO: Should be Module->get_templates()
-function get_module_templates ($module) {
-	$path = get_stylesheet_directory() . '/modules/' . $module . '/*.php';
-	$templates = [];
-
-	foreach (glob($path) as $template) {
-		$pathinfo = pathinfo($template);
-
-		if ($pathinfo['filename'] !== 'module' and substr($pathinfo['filename'], 0, 2) !== '__') {
-			$readmePath = get_stylesheet_directory() . '/modules/' . $module . '/README-' . $pathinfo['filename'] . '.md';
-			$screenshotPath = get_stylesheet_directory() . '/modules/' . $module . '/' . $pathinfo['filename'] . '.png';
-			$screenshotUrl = get_stylesheet_directory_uri() . '/modules/' . $module . '/' . $pathinfo['filename'] . '.png';
-			$templates[] = [
-				'filename' => $pathinfo['filename'],
-				'title' => $pathinfo['filename'] === 'template' ? __('Default Template', 'sleek') : \Sleek\Utils\convert_case($pathinfo['filename'], 'title'),
-				'readme' => file_exists($readmePath) ? trim(file_get_contents($readmePath)) : null,
-				'screenshot' => file_exists($screenshotPath) ? $screenshotUrl : null
-			];
-		}
-	}
-
-	sort($templates);
-
-	return $templates;
 }

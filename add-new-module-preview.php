@@ -8,18 +8,18 @@ function get_module_data () {
 	$moduleData = [];
 
 	foreach (glob($path) as $file) {
-		$pathinfo = pathinfo($file);
-		$moduleName = basename($pathinfo['dirname']);
-		$templates = get_module_templates($moduleName);
-		$readmePath = get_stylesheet_directory() . '/modules/' . $moduleName . '/README.md';
-		$screenshotPath = get_stylesheet_directory() . '/modules/' . $moduleName . '/template.png';
-		$screenshotUrl = get_stylesheet_directory_uri() . '/modules/' . $moduleName . '/template.png';
+		$moduleName = basename(dirname($file));
+		$fullClassName = "Sleek\Modules\\" . \Sleek\Utils\convert_case($moduleName, 'pascal');
+
+		$mod = new $fullClassName;
+		$templates = $mod->templates();
+		$meta = $mod->meta();
 
 		$moduleData[\Sleek\Utils\convert_case($moduleName, 'snake')] = [
 			'name' => $moduleName,
-			'title' => \Sleek\Utils\convert_case($moduleName, 'title'),
-			'readme' => file_exists($readmePath) ? file_get_contents($readmePath) : null,
-			'screenshot' => file_exists($screenshotPath) ? $screenshotUrl : null,
+			'title' => $meta['title'],
+			'readme' => $meta['readme'],
+			'screenshot' => $meta['screenshot'],
 			'templates' => $templates
 		];
 	}
