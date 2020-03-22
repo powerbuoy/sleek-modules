@@ -3,7 +3,7 @@
 namespace Sleek\Modules;
 
 # Return module at index from area/postId
-function get_flexible_module_by_area_index ($area, int $postId, int $index) {
+function get_flexible_module_by_area_index ($area, $postId, int $index) {
 	$modules = get_field($area, $postId);
 	$i = 0;
 
