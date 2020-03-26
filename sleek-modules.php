@@ -178,7 +178,10 @@ function get_module_fields (array $modules, $layout = 'normal', $withTemplates =
 			$cleanTemplates = [];
 
 			foreach ($templates as $t) {
-				$cleanTemplates[$t['filename']] = $t['title'] . ($t['readme'] ? ' - ' . $t['readme'] : '');
+				$screenshot = $t['screenshot'] ? '<img src="' . $t['screenshot'] . '" class="sleek-module-template-screenshot">' : '';
+				$readme = $t['readme'] ? '<small class="sleek-module-template-readme">' . $t['readme'] : '</small>';
+
+				$cleanTemplates[$t['filename']] = $screenshot . $t['title'] . $readme;
 			}
 
 			if (count($cleanTemplates) > 1) {
@@ -198,3 +201,41 @@ function get_module_fields (array $modules, $layout = 'normal', $withTemplates =
 
 	return $fields;
 }
+
+add_action('admin_head', function () {
+	?>
+	<style>
+		img.sleek-module-template-screenshot {
+			display: none;
+		}
+
+		span.select2-results > ul > li {
+			position: relative;
+		}
+
+		span.select2-results > ul > li > img.sleek-module-template-screenshot {
+			position: absolute;
+			left: 10rem;
+			top: 0.5rem;
+			z-index: 99;
+
+			display: none;
+			width: 8rem;
+			border: 0.5rem solid white;
+			box-shadow: 0 0.4rem 0.6rem 0 rgba(46, 77, 100, 0.39);
+
+			transform: scale(0);
+			transform-origin: left top;
+			transition: transform 0.5s ease;
+		}
+
+		span.select2-results > ul > li:hover > img.sleek-module-template-screenshot {
+			transform: scale(1);
+		}
+
+		span.select2-results > ul > li > small.sleek-module-template-readme {
+			display: block;
+		}
+	</style>
+	<?php
+});
