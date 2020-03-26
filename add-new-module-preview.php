@@ -82,7 +82,7 @@ add_action('admin_head', function () {
 				white-space: normal;
 			}
 
-			div.acf-fc-popup ul li a {
+			div.acf-fc-popup ul li > a {
 				background: white;
 
 				display: block;
@@ -100,7 +100,7 @@ add_action('admin_head', function () {
 				transition: all 0.4s ease;
 			}
 
-			div.acf-fc-popup ul li a:hover {
+			div.acf-fc-popup ul li > a:hover {
 				background: white;
 				z-index: 1;
 				color: #222;
@@ -108,18 +108,18 @@ add_action('admin_head', function () {
 				box-shadow: 0 0.6rem 1.2rem rgba(0, 0, 0, 0.2), 0 0.4rem 0.4rem rgba(0, 0, 0, 0.25);
 			}
 
-			div.acf-fc-popup ul li a figure {
+			div.acf-fc-popup ul li > a figure {
 				position: relative;
 				margin: 0 0 16px;
 			}
 
-			div.acf-fc-popup ul li a figure::before {
+			div.acf-fc-popup ul li > a figure::before {
 				display: block;
 				content: "";
 				padding-bottom: 56.25%;
 			}
 
-			div.acf-fc-popup ul li a figure img {
+			div.acf-fc-popup ul li > a figure img {
 				position: absolute;
 				left: 50%;
 				top: 50%;
@@ -128,13 +128,13 @@ add_action('admin_head', function () {
 				max-height: 100%;
 			}
 
-			div.acf-fc-popup ul li a p {
+			div.acf-fc-popup ul li > a p {
 				margin: 16px 0 0;
 				font-size: 12px;
 				font-weight: normal;
 			}
 
-			div.acf-fc-popup ul li a p + p {
+			div.acf-fc-popup ul li > a p + p {
 				margin-top: 0;
 			}
 		</style>

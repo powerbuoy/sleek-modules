@@ -122,7 +122,7 @@ abstract class Module {
 		return [
 			'title' => $title,
 			'title_plural' => $titlePlural,
-			'readme' => file_exists($readmePath) ? file_get_contents($readmePath) : null,
+			'readme' => file_exists($readmePath) ? htmlspecialchars(file_get_contents($readmePath)) : null,
 			'screenshot' => file_exists($screenshotPath) ? $screenshotUrl : null,
 			'icon' => file_exists($iconPath) ? $iconUrl : null
 		];
