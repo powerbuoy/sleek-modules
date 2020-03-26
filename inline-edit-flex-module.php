@@ -102,7 +102,8 @@ add_action('init', function () {
 									display: block;
 								}
 
-								/* Remove flex field actions */
+								/* Remove flex field actions and label */
+								.acf-field-flexible-content > .acf-label,
 								.acf-flexible-content > .acf-actions {
 									display: none;
 								}

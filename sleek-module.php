@@ -113,6 +113,8 @@ abstract class Module {
 		$readmePath = $this->path . '/README.md';
 		$screenshotPath = $this->path . '/template.png';
 		$screenshotUrl = $this->uri . '/template.png';
+		$iconPath = $this->path . '/icon.svg';
+		$iconUrl = $this->uri . '/icon.svg';
 
 		$title = \Sleek\Utils\convert_case($this->moduleName, 'title');
 		$titlePlural = \Sleek\Utils\convert_case($this->moduleName, 'plural');
@@ -121,7 +123,8 @@ abstract class Module {
 			'title' => $title,
 			'title_plural' => $titlePlural,
 			'readme' => file_exists($readmePath) ? file_get_contents($readmePath) : null,
-			'screenshot' => file_exists($screenshotPath) ? $screenshotUrl : null
+			'screenshot' => file_exists($screenshotPath) ? $screenshotUrl : null,
+			'icon' => file_exists($iconPath) ? $iconUrl : null
 		];
 	}
 }

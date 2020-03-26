@@ -20,6 +20,7 @@ function get_module_data () {
 			'title' => $meta['title'],
 			'readme' => $meta['readme'],
 			'screenshot' => $meta['screenshot'],
+			'icon' => $meta['icon'],
 			'templates' => $templates
 		];
 	}
@@ -34,6 +35,8 @@ add_action('admin_head', function () {
 			div.acf-fc-popup {
 				--sleek-anmp-cols: 1;
 
+				background: white;
+
 				position: fixed;
 				left: 50% !important;
 				top: 50% !important;
@@ -46,7 +49,7 @@ add_action('admin_head', function () {
 
 				margin: 0 !important;
 				padding: 3rem;
-				box-shadow: 0 0 0 100vw rgba(0, 0, 0, .5);
+				box-shadow: 0 0 0 100vw rgba(0, 0, 0, .8);
 			}
 
 			@media (min-width: 600px) {
@@ -80,27 +83,52 @@ add_action('admin_head', function () {
 			}
 
 			div.acf-fc-popup ul li a {
+				background: white;
+
 				display: block;
-				padding: 0;
+				padding: 1.5rem;
+
 				font-size: 18px;
 				font-weight: bold;
+				color: #222;
+				text-align: center;
+
+				border-radius: 0.25rem;
+				box-shadow: none;
+				transform: scale(1);
+				transition: all 0.4s ease;
 			}
 
 			div.acf-fc-popup ul li a:hover {
-				background: transparent;
+				background: white;
+				color: #222;
+				transform: scale(1.1);
+				box-shadow: 0 0.6rem 1.2rem rgba(0, 0, 0, 0.2), 0 0.4rem 0.4rem rgba(0, 0, 0, 0.25);
 			}
 
 			div.acf-fc-popup ul li a figure {
+				position: relative;
 				margin: 0 0 16px;
 			}
 
+			div.acf-fc-popup ul li a figure::before {
+				display: block;
+				content: "";
+				padding-bottom: 56.25%;
+			}
+
 			div.acf-fc-popup ul li a figure img {
-				width: 100%;
+				position: absolute;
+				left: 50%;
+				top: 50%;
+				transform: translate(-50%, -50%);
+				max-width: 100%;
+				max-height: 100%;
 			}
 
 			div.acf-fc-popup ul li a p {
 				margin: 16px 0 0;
-				font-size: 14px;
+				font-size: 12px;
 				font-weight: normal;
 			}
 
@@ -124,40 +152,11 @@ add_action('admin_footer', function () {
 					setTimeout(function () {
 						// Go through every acf-fc-popup element (there should only be one)
 						document.querySelectorAll('div.acf-fc-popup').forEach(function (popup) {
-							// First insert additional templates
-							popup.querySelectorAll('li').forEach(function (mod) {
-								var link = mod.querySelector('a');
-								var moduleName = link.dataset.layout || null;
-								var moduleInfo = moduleData[moduleName] || null;
-								var linkHTML = mod.innerHTML;
-
-								link.setAttribute('data-template', 'template');
-
-								// TODO
-								if (false && moduleInfo.templates) {
-									moduleInfo.templates.forEach(function (template) {
-										if (template.filename !== 'template') {
-											var templateLi = document.createElement('li');
-
-											templateLi.innerHTML = linkHTML;
-
-											var templateLink = templateLi.querySelector('a');
-
-											templateLink.innerText += ' (' + template.title + ')';
-
-											templateLink.setAttribute('data-template', template.filename);
-											mod.parentNode.insertBefore(templateLi, mod.nextSibling);
-										}
-									});
-								}
-							});
-
 							// Now insert additional data to all links
 							popup.querySelectorAll('li').forEach(function (mod) {
 								var link = mod.querySelector('a');
 								var moduleName = link.dataset.layout || null;
 								var moduleInfo = moduleData[moduleName] || null;
-								var linkHTML = mod.innerHTML;
 
 								if (moduleInfo) {
 									if (moduleInfo.readme) {
@@ -171,33 +170,17 @@ add_action('admin_footer', function () {
 									var screenshot = document.createElement('figure');
 									var src = 'https://placehold.it/800x800?text=' + moduleInfo.title;
 
-									if (link.dataset.template && moduleInfo.templates) {
-										moduleInfo.templates.forEach(function (template) {
-											if (template.filename === link.dataset.template) {
-												if (template.screenshot) {
-													src = template.screenshot;
-												}
-
-												if (template.readme) {
-													var readme = document.createElement('p');
-
-													readme.innerHTML = template.readme;
-
-													link.appendChild(readme);
-												}
-											}
-										});
+									if (moduleInfo.icon) {
+										src = moduleInfo.icon;
+									}
+									else if (moduleInfo.screenshot) {
+										src = moduleInfo.screenshot;
 									}
 
 									screenshot.innerHTML = '<img src="' + src + '">';
 
 									link.prepend(screenshot);
 								}
-
-								// TODO: Select the correct template
-							/*	link.addEventListener('click', function () {
-									console.log('Adding module ' + link.dataset.layout + ' with template ' + link.dataset.template);
-								}); */
 							});
 						});
 					}, 50); // NOTE: Wait for popup to render
