@@ -131,6 +131,12 @@ add_action('init', function () {
 									padding-right: 0;
 									border: 0;
 								}
+
+								/* NOTE: Hide additional module template info */
+								img.sleek-module-template-screenshot,
+								small.sleek-module-template-readme {
+									display: none;
+								}
 							</style>
 						</head>
 						<body>
