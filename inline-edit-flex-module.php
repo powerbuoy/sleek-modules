@@ -44,6 +44,10 @@ add_action('init', function () {
 						$wp_query->query_vars['sleek_modules_inline_edit_index']
 					);
 					$moduleTitle = isset($module['acf_fc_layout']) ? \Sleek\Utils\convert_case($module['acf_fc_layout'], 'title') : null;
+					$areaTitle = \Sleek\Utils\convert_case($wp_query->query_vars['sleek_modules_inline_edit_area'], 'title');
+					$postIdTitle = is_numeric($wp_query->query_vars['sleek_modules_inline_edit_post_id']) ?
+						get_the_title($wp_query->query_vars['sleek_modules_inline_edit_post_id']) :
+						\Sleek\Utils\convert_case($wp_query->query_vars['sleek_modules_inline_edit_post_id'], 'title');
 
 					# Render form
 					?>
@@ -60,6 +64,12 @@ add_action('init', function () {
 									font-size: 13px;
 									line-height: 1.4em;
 									margin: 0;
+								}
+
+								mark {
+									background: transparent;
+									color: inherit;
+									font-style: italic;
 								}
 
 								/* Hide admin bar and cookie consent */
@@ -140,9 +150,19 @@ add_action('init', function () {
 							</style>
 						</head>
 						<body>
-							<?php if ($moduleTitle) : ?>
-								<h1><?php printf(__('Edit %s', 'sleek'), $moduleTitle) ?></h1>
-							<?php endif ?>
+							<header>
+								<?php if ($moduleTitle) : ?>
+									<h1><?php printf(__('Edit %s', 'sleek'), $moduleTitle) ?></h1>
+								<?php endif ?>
+								<p>
+									<?php printf(
+										__('Editing %s inside %s belonging to %s', 'sleek'),
+										"<mark>$moduleTitle</mark>",
+										"<mark>$areaTitle</mark>",
+										"<mark>$postIdTitle</mark>"
+									) ?>
+								</p>
+							</header>
 							<?php
 								acf_form([
 									'id' => 'acf-form-' . $wp_query->query_vars['sleek_modules_inline_edit_area'] . '-' . $wp_query->query_vars['sleek_modules_inline_edit_post_id'],
@@ -153,12 +173,10 @@ add_action('init', function () {
 							<?php wp_footer() ?>
 							<script>
 								acf.unload.active = false;
-							</script>
-							<?php if (isset($_GET['updated'])) : ?>
-								<script>
+								<?php if (isset($_GET['updated'])) : ?>
 									window.parent.postMessage({sleekModulesInlineEditUpdated: true}, '<?php echo home_url() ?>');
-								</script>
-							<?php endif ?>
+								<?php endif ?>
+							</script>
 						</body>
 					</html>
 					<?php
