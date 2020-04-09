@@ -217,7 +217,7 @@ add_action('after_setup_theme', function () {
 				}
 
 				.sleek-modules-inline-edit a::before {
-					content: "✏️";
+					content: var(--sleek-modules-inline-edit-icon, "✏️");
 					font-size: var(--sleek-modules-inline-edit-icon-size, 2rem);
 					text-shadow: var(--sleek-modules-inline-edit-icon-shadow, 0.2rem 0.2rem 0.2rem rgba(0, 0, 0, .2));
 					margin: 0;
