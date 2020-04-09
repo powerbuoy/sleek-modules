@@ -69,7 +69,7 @@ add_action('init', function () {
 								mark {
 									background: transparent;
 									color: inherit;
-									font-style: italic;
+									font-weight: bold;
 								}
 
 								/* Hide admin bar and cookie consent */
@@ -202,6 +202,25 @@ add_action('after_setup_theme', function () {
 
 				.sleek-modules-inline-edit-dialog {
 					--dialog-width: 60rem;
+				}
+
+				.sleek-modules-inline-edit {
+					position: relative;
+				}
+
+				.sleek-modules-inline-edit a {
+					font-size: 0;
+					position: absolute;
+					right: var(--spacing-default, 1rem);
+					top: var(--spacing-default, 1rem);
+					z-index: 98;
+				}
+
+				.sleek-modules-inline-edit a::before {
+					content: "✏️";
+					font-size: var(--sleek-modules-inline-edit-icon-size, 2rem);
+					text-shadow: var(--sleek-modules-inline-edit-icon-shadow, 0.2rem 0.2rem 0.2rem rgba(0, 0, 0, .2));
+					margin: 0;
 				}
 			</style>
 			<?php
