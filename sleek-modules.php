@@ -179,7 +179,7 @@ function get_module_fields (array $modules, $layout = 'normal', $withTemplates =
 
 			foreach ($templates as $t) {
 				$screenshot = $t['screenshot'] ? '<img src="' . $t['screenshot'] . '" class="sleek-module-template-screenshot">' : '';
-				$readme = $t['readme'] ? '<small class="sleek-module-template-readme">' . $t['readme'] : '</small>';
+				$readme = $t['readme'] ? '<small class="sleek-module-template-readme">' . $t['readme'] . '</small>' : '';
 
 				$cleanTemplates[$t['filename']] = $screenshot . $t['title'] . $readme;
 			}
