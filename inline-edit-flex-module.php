@@ -118,13 +118,14 @@ add_action('init', function () {
 									display: none;
 								}
 
-								/* Remove border from layouts */
+								/* Remove border from layouts and hide them all */
 								.acf-flexible-content .values .layout {
 									margin: 0;
 									border: 0;
-									display: none;
+									display: block;
 								}
 
+								/* Except the current one */
 								.acf-flexible-content .values .layout[data-id="row-<?php echo $wp_query->query_vars['sleek_modules_inline_edit_index'] ?>"] {
 									display: block;
 								}
@@ -167,7 +168,8 @@ add_action('init', function () {
 								acf_form([
 									'id' => 'acf-form-' . $wp_query->query_vars['sleek_modules_inline_edit_area'] . '-' . $wp_query->query_vars['sleek_modules_inline_edit_post_id'],
 									'fields' => [$wp_query->query_vars['sleek_modules_inline_edit_area']],
-									'post_id' => $wp_query->query_vars['sleek_modules_inline_edit_post_id']
+									'post_id' => $wp_query->query_vars['sleek_modules_inline_edit_post_id'],
+									'kses' => false
 								]);
 							?>
 							<?php wp_footer() ?>
