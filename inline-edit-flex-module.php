@@ -123,7 +123,7 @@ add_action('init', function () {
 								.acf-flexible-content .values .layout {
 									margin: 0;
 									border: 0;
-									display: block;
+									display: none;
 								}
 
 								/* Except the current one */
