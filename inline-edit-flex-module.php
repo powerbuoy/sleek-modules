@@ -29,6 +29,7 @@ add_action('init', function () {
 				else {
 					# Enable jQuery
 					remove_theme_support('sleek/disable_jquery');
+					remove_theme_support('sleek/jquery_cdn');
 
 					# Disable sleek styling
 					add_action('wp_enqueue_scripts', function () {
