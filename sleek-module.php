@@ -73,7 +73,7 @@ abstract class Module {
 
 		# We found a template to render the module
 		if (locate_template("$templatePath.php")) {
-			\Sleek\Utils\get_template_part($templatePath, null, array_merge($this->data(), $this->templateData));
+			\Sleek\Utils\get_template_part($templatePath, null, array_merge($this->templateData, $this->data()));
 		}
 		# No template found!
 		else {
