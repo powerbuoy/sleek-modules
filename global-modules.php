@@ -26,34 +26,12 @@ add_action('acf/init', function () {
 					'layouts' => \Sleek\Acf\generate_keys(
 						get_module_fields(
 							apply_filters('sleek/modules/global_modules', ['text-block', 'text-blocks']),
-							'flexible', true, ['field_group_key' => 'group_global_modules']
+							'flexible', true
 						),
 						'field_global_modules'
 					)
 				]
 			]
 		]);
-
-		# Add the global_modules_field field to all modules on the global modules options page
-		add_filter('sleek/modules/fields', function ($fields, $module, $args) {
-			if ($args['field_group_key'] === 'group_global_modules') {
-				$fields[] = [
-					'name' => 'global_module_id',
-					'type' => 'text', # TODO: Hidden?? TODO: readonly
-					'label' => __('Global Module ID', 'sleek')
-				];
-			}
-
-			return $fields;
-		}, 10, 3);
-
-		# Auto-populate global_module_id
-		add_filter('acf/update_value/name=global_module_id', function ($value, $postId, $field) {
-			if (empty($value)) {
-				$value = uniqid();
-			}
-
-			return $value;
-		}, 10, 3);
 	}
 });
