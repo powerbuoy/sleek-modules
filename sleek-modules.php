@@ -202,11 +202,17 @@ function get_module_fields (array $modules, $layout = 'normal', $withTemplates =
 	return $fields;
 }
 
+#############################
+# Style the template dropdown
 add_action('admin_head', function () {
 	?>
 	<style>
 		img.sleek-module-template-screenshot {
 			display: none;
+		}
+
+		.select2-container--default .select2-results > .select2-results__options[id$="_template-results"] {
+			overflow: visible;
 		}
 
 		span.select2-results > ul > li {
@@ -215,22 +221,22 @@ add_action('admin_head', function () {
 
 		span.select2-results > ul > li > img.sleek-module-template-screenshot {
 			position: absolute;
-			left: 10rem;
-			top: 0.5rem;
+			left: -1.5rem;
+			top: 50%;
 			z-index: 99;
 
-			display: none;
-			width: 8rem;
-			border: 0.5rem solid white;
-			box-shadow: 0 0.4rem 0.6rem 0 rgba(46, 77, 100, 0.39);
+			display: block;
+			width: 10rem;
+			border: 0.25rem solid white;
+			box-shadow: 0 0 0.4rem 0 rgba(0, 0, 0, .75);
 
-			transform: scale(0);
-			transform-origin: left top;
-			transition: transform 0.5s ease;
+			transform: translate(-100%, -50%) scale(0);
+			transform-origin: right 50%;
+			transition: transform 0.25s ease;
 		}
 
 		span.select2-results > ul > li:hover > img.sleek-module-template-screenshot {
-			transform: scale(1);
+			transform: translate(-100%, -50%) scale(1);
 		}
 
 		span.select2-results > ul > li > small.sleek-module-template-readme {
