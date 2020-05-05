@@ -33,9 +33,9 @@ abstract class Module {
 		return [];
 	}
 
-	# Returns $this->fields() but passed through a filter with potential $args
-	public function filtered_fields ($args = null) {
-		$filteredFields = apply_filters('sleek/modules/fields', $this->fields(), $this->moduleName, $args);
+	# Returns $this->fields() but passed through a filter
+	public function filtered_fields () {
+		$filteredFields = apply_filters('sleek/modules/fields', $this->fields(), $this->moduleName);
 
 		# Make sure filter didn't fuck up fields array
 		if (!is_array($filteredFields)) {
