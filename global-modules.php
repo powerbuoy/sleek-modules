@@ -3,6 +3,11 @@ namespace Sleek\Modules;
 
 add_action('acf/init', function () {
 	if (get_theme_support('sleek/modules/global_modules')) {
+		$moduleDirectories = array_filter(glob(get_stylesheet_directory() . '/modules/*'), 'is_dir');
+		$moduleDirectories = array_map('basename', $moduleDirectories);
+		$allModules = array_values($moduleDirectories);
+		$allModules = array_diff($allModules, ['global-module']);
+
 		# Create Global Module Post Type
 		register_post_type('sleek_global_module', [
 			'labels' => [
@@ -31,7 +36,7 @@ add_action('acf/init', function () {
 					'button_label' => __('Add a Module', 'sleek'),
 					'layouts' => \Sleek\Acf\generate_keys(
 						get_module_fields(
-							apply_filters('sleek/modules/global_modules', ['text-block', 'text-blocks']),
+							apply_filters('sleek/modules/global_modules', $allModules),
 							'flexible', true
 						),
 						'field_global_modules'
