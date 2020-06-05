@@ -216,7 +216,7 @@ add_action('after_setup_theme', function () {
 					position: absolute;
 					right: var(--spacing-default, 1rem);
 					top: var(--spacing-default, 1rem);
-					z-index: 98;
+					z-index: 999;
 				}
 
 				.sleek-modules-inline-edit a::before {
