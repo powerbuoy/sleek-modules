@@ -158,31 +158,29 @@ add_action('admin_footer', function () {
 							popup.querySelectorAll('li').forEach(function (mod) {
 								var link = mod.querySelector('a');
 								var moduleName = link.dataset.layout || null;
-								var moduleInfo = moduleData[moduleName] || null;
+								var moduleInfo = moduleData[moduleName] || {};
 
-								if (moduleInfo) {
-									if (moduleInfo.readme) {
-										var readme = document.createElement('p');
+								if (moduleInfo.readme) {
+									var readme = document.createElement('p');
 
-										readme.innerHTML = moduleInfo.readme;
+									readme.innerHTML = moduleInfo.readme;
 
-										link.appendChild(readme);
-									}
-
-									var screenshot = document.createElement('figure');
-									var src = 'https://placehold.it/800x800?text=' + moduleInfo.title;
-
-									if (moduleInfo.icon) {
-										src = moduleInfo.icon;
-									}
-									else if (moduleInfo.screenshot) {
-										src = moduleInfo.screenshot;
-									}
-
-									screenshot.innerHTML = '<img src="' + src + '">';
-
-									link.prepend(screenshot);
+									link.appendChild(readme);
 								}
+
+								var screenshot = document.createElement('figure');
+								var src = 'https://placehold.it/800x800?text=' + (moduleInfo.title || link.innerText);
+
+								if (moduleInfo.icon) {
+									src = moduleInfo.icon;
+								}
+								else if (moduleInfo.screenshot) {
+									src = moduleInfo.screenshot;
+								}
+
+								screenshot.innerHTML = '<img src="' + src + '">';
+
+								link.prepend(screenshot);
 							});
 						});
 					}, 50); // NOTE: Wait for popup to render
