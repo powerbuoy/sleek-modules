@@ -73,11 +73,19 @@ abstract class Module {
 
 		# We found a template to render the module
 		if (locate_template("$templatePath.php")) {
-			\Sleek\Utils\get_template_part($templatePath, null, array_merge($this->templateData, $this->data()));
+			$additionalData = $this->data();
+
+			if (!is_array($additionalData)) {
+				trigger_error("Sleek\Modules\\{$this->className}->data() did not return an array", E_USER_WARNING);
+
+				$additionalData = [];
+			}
+
+			\Sleek\Utils\get_template_part($templatePath, null, array_merge($this->templateData, $additionalData));
 		}
 		# No template found!
 		else {
-			trigger_error("Sleek\Modules\{$this->className}->render($template): failed opening '$template' for rendering", E_USER_WARNING);
+			trigger_error("Sleek\Modules\\{$this->className}->render($template): failed opening '$template' for rendering", E_USER_WARNING);
 		}
 	}
 
