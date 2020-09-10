@@ -44,5 +44,14 @@ add_action('acf/init', function () {
 				]
 			]
 		]);
+
+		# Enable translations of global modules
+		add_filter('pll_get_post_types', function ($postTypes, $isSettings) {
+			if ($isSettings) {
+				$postTypes['sleek_global_module'] = 'sleek_global_module';
+			}
+
+			return $postTypes;
+		}, 10, 2);
 	}
 });
