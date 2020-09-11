@@ -117,6 +117,7 @@ function get_module_fields (array $modules, $layout = 'normal', $withTemplates =
 		$fullClassName = "Sleek\Modules\\$className";
 		$moduleFields = null;
 		$templates = null;
+		$meta = null;
 
 		# Create module class and get fields
 		if (class_exists($fullClassName)) {
@@ -124,12 +125,13 @@ function get_module_fields (array $modules, $layout = 'normal', $withTemplates =
 			$moduleFields = $mod->filtered_fields();
 			$templates = $mod->templates();
 			$meta = $mod->meta();
+			$label = $meta['name'];
 		}
 
 		# Create field group
 		$field = [
 			'name' => $snakeName,
-			'label' => $meta['name'],
+			'label' => $label,
 			'sub_fields' => []
 		];
 
