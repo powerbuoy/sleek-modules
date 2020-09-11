@@ -191,7 +191,7 @@ function get_module_fields (array $modules, $layout = 'normal', $withTemplates =
 					'label' => __('Template', 'sleek'),
 					'type' => 'select',
 					'choices' => $cleanTemplates,
-					'default_value' => 'template',
+					'default_value' => ($meta ? $meta['default_template'] : 'template'),
 					'ui' => true
 				]);
 			}

@@ -10,6 +10,7 @@ abstract class Module {
 	protected static $fileHeaders = [
 		'name' => 'Name',
 		'description' => 'Description',
+		'default_template' => 'Default Template',
 		'author' => 'Author',
 		'author_uri' => 'Author URI',
 		'version' => 'Version',
@@ -137,6 +138,11 @@ abstract class Module {
 		$meta = get_file_data($this->path . '/module.php', self::$fileHeaders);
 		$meta['name'] = empty($meta['name']) ? \Sleek\Utils\convert_case($this->moduleName, 'title') : $meta['name'];
 		$meta['icon'] = file_exists($iconPath) ? $iconUrl : null;
+		$meta['default_template'] = empty($meta['default_template']) ? 'template' : $meta['default_template'];
+
+		if (!file_exists($this->path . '/' . $meta['default_template'] . '.php')) {
+			trigger_error("Sleek\Modules\\{$this->className}: The default template ({$meta['default_template']}) for this module does not exist", E_USER_ERROR);
+		}
 
 		return $meta;
 	}
