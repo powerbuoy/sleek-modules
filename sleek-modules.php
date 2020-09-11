@@ -116,11 +116,20 @@ function get_module_fields (array $modules, $layout = 'normal', $withTemplates =
 		$className = \Sleek\Utils\convert_case($module, 'pascal');
 		$fullClassName = "Sleek\Modules\\$className";
 		$moduleFields = null;
+		$templates = null;
+
+		# Create module class and get fields
+		if (class_exists($fullClassName)) {
+			$mod = new $fullClassName;
+			$moduleFields = $mod->filtered_fields();
+			$templates = $mod->templates();
+			$meta = $mod->meta();
+		}
 
 		# Create field group
 		$field = [
 			'name' => $snakeName,
-			'label' => __($label, 'sleek'),
+			'label' => $meta['name'],
 			'sub_fields' => []
 		];
 
@@ -149,15 +158,6 @@ function get_module_fields (array $modules, $layout = 'normal', $withTemplates =
 			}
 		}
 
-		# Create module class and get fields
-		$templates = null;
-
-		if (class_exists($fullClassName)) {
-			$mod = new $fullClassName;
-			$moduleFields = $mod->filtered_fields();
-			$templates = $mod->templates();
-		}
-
 		# We have fields
 		if ($moduleFields) {
 			$field['sub_fields'] = $moduleFields;
@@ -179,9 +179,8 @@ function get_module_fields (array $modules, $layout = 'normal', $withTemplates =
 
 			foreach ($templates as $t) {
 				$screenshot = $t['screenshot'] ? '<img src="' . $t['screenshot'] . '" class="sleek-module-template-screenshot">' : '';
-				$readme = $t['readme'] ? '<small class="sleek-module-template-readme">' . $t['readme'] . '</small>' : '';
-
-				$cleanTemplates[$t['filename']] = $screenshot . $t['title'] . $readme;
+				$description = $t['description'] ? ' <small class="sleek-module-template-description">' . $t['description'] . '</small>' : '';
+				$cleanTemplates[$t['filename']] = $screenshot . $t['name'] . $description;
 			}
 
 			if (count($cleanTemplates) > 1) {
@@ -239,7 +238,7 @@ add_action('admin_head', function () {
 			transform: translate(-100%, -50%) scale(1);
 		}
 
-		span.select2-results > ul > li > small.sleek-module-template-readme {
+		span.select2-results > ul > li > small.sleek-module-template-description {
 			display: block;
 		}
 	</style>

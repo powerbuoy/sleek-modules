@@ -10,19 +10,11 @@ function get_module_data () {
 	foreach (glob($path) as $file) {
 		$moduleName = basename(dirname($file));
 		$fullClassName = "Sleek\Modules\\" . \Sleek\Utils\convert_case($moduleName, 'pascal');
-
 		$mod = new $fullClassName;
 		$templates = $mod->templates();
 		$meta = $mod->meta();
-
-		$moduleData[\Sleek\Utils\convert_case($moduleName, 'snake')] = [
-			'name' => $moduleName,
-			'title' => $meta['title'],
-			'readme' => $meta['readme'],
-			'screenshot' => $meta['screenshot'],
-			'icon' => $meta['icon'],
-			'templates' => $templates
-		];
+		$meta['templates'] = $templates;
+		$moduleData[\Sleek\Utils\convert_case($moduleName, 'snake')] = $meta;
 	}
 
 	return $moduleData;
@@ -160,16 +152,16 @@ add_action('admin_footer', function () {
 								var moduleName = link.dataset.layout || null;
 								var moduleInfo = moduleData[moduleName] || {};
 
-								if (moduleInfo.readme) {
-									var readme = document.createElement('p');
+								if (moduleInfo.description) {
+									var description = document.createElement('p');
 
-									readme.innerHTML = moduleInfo.readme;
+									description.innerHTML = moduleInfo.description;
 
-									link.appendChild(readme);
+									link.appendChild(description);
 								}
 
 								var screenshot = document.createElement('figure');
-								var src = 'https://placehold.it/800x800?text=' + (moduleInfo.title || link.innerText);
+								var src = 'https://placehold.it/800x800?text=' + (moduleInfo.name || link.innerText);
 
 								if (moduleInfo.icon) {
 									src = moduleInfo.icon;

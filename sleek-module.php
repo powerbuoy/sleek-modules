@@ -7,6 +7,16 @@ abstract class Module {
 	protected $snakeName;
 	protected $className;
 	protected $acfKey;
+	protected static $fileHeaders = [
+		'name' => 'Name',
+		'description' => 'Description',
+		'author' => 'Author',
+		'author_uri' => 'Author URI',
+		'version' => 'Version',
+		'tags' => 'Tags',
+		'requires_wp'  => 'Requires at least',
+		'requires_php' => 'Requires PHP'
+	];
 
 	# Create module
 	public function __construct () {
@@ -98,16 +108,20 @@ abstract class Module {
 			$filename = pathinfo($template)['filename'];
 
 			if ($filename !== 'module' and substr($filename, 0, 2) !== '__') {
-				$readmePath = "{$this->path}/$filename.md";
 				$screenshotPath = "{$this->path}/$filename.png";
 				$screenshotUrl = "{$this->uri}/$filename.png";
+				$meta = get_file_data($template, self::$fileHeaders);
+				$meta['screenshot'] = file_exists($screenshotPath) ? $screenshotUrl : null;
+				$meta['filename'] = $filename;
 
-				$templates[] = [
-					'filename' => $filename,
-					'title' => $filename === 'template' ? __('Default Template', 'sleek') : \Sleek\Utils\convert_case($filename, 'title'),
-					'readme' => file_exists($readmePath) ? htmlspecialchars(trim(file_get_contents($readmePath))) : null,
-					'screenshot' => file_exists($screenshotPath) ? $screenshotUrl : null
-				];
+				if ($filename === 'template' && empty($meta['name'])) {
+					$meta['name'] = __('Default Template', 'sleek');
+				}
+				elseif ($filename !== 'template') {
+					$meta['name'] = empty($meta['name']) ? \Sleek\Utils\convert_case($filename, 'title') : $meta['name'];
+				}
+
+				$templates[] = $meta;
 			}
 		}
 
@@ -118,21 +132,12 @@ abstract class Module {
 
 	# Return meta data about module
 	public function meta () {
-		$readmePath = $this->path . '/README.md';
-		$screenshotPath = $this->path . '/template.png';
-		$screenshotUrl = $this->uri . '/template.png';
 		$iconPath = $this->path . '/icon.svg';
 		$iconUrl = $this->uri . '/icon.svg';
+		$meta = get_file_data($this->path . '/module.php', self::$fileHeaders);
+		$meta['name'] = empty($meta['name']) ? \Sleek\Utils\convert_case($this->moduleName, 'title') : $meta['name'];
+		$meta['icon'] = file_exists($iconPath) ? $iconUrl : null;
 
-		$title = \Sleek\Utils\convert_case($this->moduleName, 'title');
-		$titlePlural = \Sleek\Utils\convert_case($this->moduleName, 'plural');
-
-		return [
-			'title' => $title,
-			'title_plural' => $titlePlural,
-			'readme' => file_exists($readmePath) ? htmlspecialchars(trim(file_get_contents($readmePath))) : null,
-			'screenshot' => file_exists($screenshotPath) ? $screenshotUrl : null,
-			'icon' => file_exists($iconPath) ? $iconUrl : null
-		];
+		return $meta;
 	}
 }

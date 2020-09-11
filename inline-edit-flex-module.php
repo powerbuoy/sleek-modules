@@ -146,7 +146,7 @@ add_action('init', function () {
 
 								/* NOTE: Hide additional module template info */
 								img.sleek-module-template-screenshot,
-								small.sleek-module-template-readme {
+								small.sleek-module-template-description {
 									display: none;
 								}
 							</style>
