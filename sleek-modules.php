@@ -181,7 +181,7 @@ function get_module_fields (array $modules, $layout = 'normal', $withTemplates =
 
 			foreach ($templates as $t) {
 				$screenshot = $t['screenshot'] ? '<img src="' . $t['screenshot'] . '" class="sleek-module-template-screenshot">' : '';
-				$description = $t['description'] ? ' <small class="sleek-module-template-description">' . $t['description'] . '</small>' : '';
+				$description = $t['description'] ? '<small class="sleek-module-template-description">' . $t['description'] . '</small>' : '';
 				$cleanTemplates[$t['filename']] = $screenshot . $t['name'] . $description;
 			}
 
@@ -208,6 +208,10 @@ function get_module_fields (array $modules, $layout = 'normal', $withTemplates =
 add_action('admin_head', function () {
 	?>
 	<style>
+		.select2-selection__rendered .sleek-module-template-description {
+			display: none;
+		}
+
 		img.sleek-module-template-screenshot {
 			display: none;
 		}
