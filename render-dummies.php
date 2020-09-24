@@ -67,6 +67,10 @@ add_filter('sleek/modules/dummy_field_value', function ($value, $field, $module,
 	# Textarea
 	# TODO: Check maxlength
 	elseif ($field['type'] === 'textarea') {
+		if (isset($field['return_format']) and $field['return_format'] === 'array') {
+			return ['Lorem ipsum', 'Dolor sit amet', 'Donec eu libero', 'Quam egestas semper'];
+		}
+
 		return 'Lorem ipsum dolor sit amet. Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est. Mauris placerat eleifend leo.';
 	}
 
