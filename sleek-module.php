@@ -10,13 +10,15 @@ abstract class Module {
 	protected static $fileHeaders = [
 		'name' => 'Name',
 		'description' => 'Description',
+		'category' => 'Category',
 		'default_template' => 'Default Template',
 		'author' => 'Author',
 		'author_uri' => 'Author URI',
 		'version' => 'Version',
 		'tags' => 'Tags',
 		'requires_wp'  => 'Requires at least',
-		'requires_php' => 'Requires PHP'
+		'requires_php' => 'Requires PHP',
+		'dashicon' => 'Dashicon'
 	];
 
 	# Create module
@@ -61,6 +63,11 @@ abstract class Module {
 	# Get a single field
 	public function get_field ($name) {
 		return $this->templateData[$name] ?? null;
+	}
+
+	# ACF Gutenberg block data
+	public function acf_block_config () {
+		return [];
 	}
 
 	# Render module
@@ -108,7 +115,7 @@ abstract class Module {
 		foreach (glob($path) as $template) {
 			$filename = pathinfo($template)['filename'];
 
-			if ($filename !== 'module' and substr($filename, 0, 2) !== '__') {
+			if ($filename !== 'module' and $filename !== 'block-template' and substr($filename, 0, 2) !== '__') {
 				$screenshotPath = "{$this->path}/$filename.png";
 				$screenshotUrl = "{$this->uri}/$filename.png";
 				$meta = get_file_data($template, self::$fileHeaders);
@@ -138,7 +145,9 @@ abstract class Module {
 		$meta = get_file_data($this->path . '/module.php', self::$fileHeaders);
 		$meta['name'] = empty($meta['name']) ? \Sleek\Utils\convert_case($this->moduleName, 'title') : $meta['name'];
 		$meta['icon'] = file_exists($iconPath) ? $iconUrl : null;
+		$meta['icon_path'] = file_exists($iconPath) ? $iconPath : null;
 		$meta['default_template'] = empty($meta['default_template']) ? 'template' : $meta['default_template'];
+		$meta['block_template'] = file_exists($this->path . '/block-template.php') ? $this->path . '/block-template.php' : null;
 
 		if (!file_exists($this->path . '/' . $meta['default_template'] . '.php')) {
 			trigger_error("Sleek\Modules\\{$this->className}: The default template ({$meta['default_template']}) for this module does not exist", E_USER_ERROR);

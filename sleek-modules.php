@@ -6,6 +6,7 @@ require_once __DIR__ . '/global-modules.php';
 require_once __DIR__ . '/inline-edit-flex-module.php';
 require_once __DIR__ . '/preview-dummy-module.php';
 require_once __DIR__ . '/preview-flex-module.php';
+require_once __DIR__ . '/register-blocks.php';
 require_once __DIR__ . '/render-dummies.php';
 
 ################################

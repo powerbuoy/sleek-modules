@@ -12,6 +12,7 @@
         "files": ["sleek-module.php", "sleek-modules.php"]
     },
     "require": {
+        "powerbuoy/sleek-acf": "^2.0.0",
         "powerbuoy/sleek-utils": "^1.0.0"
     }
 }
