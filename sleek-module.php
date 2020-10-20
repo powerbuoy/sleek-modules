@@ -147,7 +147,8 @@ abstract class Module {
 		$meta['icon'] = file_exists($iconPath) ? $iconUrl : null;
 		$meta['icon_path'] = file_exists($iconPath) ? $iconPath : null;
 		$meta['default_template'] = empty($meta['default_template']) ? 'template' : $meta['default_template'];
-		$meta['block_template'] = file_exists($this->path . '/block-template.php') ? $this->path . '/block-template.php' : null;
+		$meta['block_template'] = file_exists($this->path . '/block-template.php') ? $this->uri . '/block-template.php' : null;
+		$meta['block_style'] = file_exists($this->path . '/block.css') ? $this->uri . '/block.css' : null;
 
 		if (!file_exists($this->path . '/' . $meta['default_template'] . '.php')) {
 			trigger_error("Sleek\Modules\\{$this->className}: The default template ({$meta['default_template']}) for this module does not exist", E_USER_ERROR);
