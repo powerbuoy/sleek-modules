@@ -12,6 +12,7 @@ abstract class Module {
 		'description' => 'Description',
 		'category' => 'Category',
 		'default_template' => 'Default Template',
+		'default_block_template' => 'Default Block Template',
 		'author' => 'Author',
 		'author_uri' => 'Author URI',
 		'version' => 'Version',
@@ -46,6 +47,16 @@ abstract class Module {
 		return [];
 	}
 
+	# ACF Gutenberg block config data
+	public function block_config () {
+		return [];
+	}
+
+	# Get a single field
+	public function get_field ($name) {
+		return $this->templateData[$name] ?? null;
+	}
+
 	# Returns $this->fields() but passed through a filter
 	public function filtered_fields () {
 		$filteredFields = apply_filters('sleek/modules/fields', $this->fields(), $this->moduleName);
@@ -58,16 +69,6 @@ abstract class Module {
 		}
 
 		return $filteredFields;
-	}
-
-	# Get a single field
-	public function get_field ($name) {
-		return $this->templateData[$name] ?? null;
-	}
-
-	# ACF Gutenberg block data
-	public function acf_block_config () {
-		return [];
 	}
 
 	# Render module
@@ -109,23 +110,40 @@ abstract class Module {
 
 	# Return array of templates for this module
 	public function templates () {
-		$path = $this->path . '/*.php';
+		# Get all templates
+		$templates = $this->get_templates($this->path . '/*.php');
+
+		# Filter out block templates
+		$templates = array_filter($templates, function ($template) {
+			return substr($template['filename'], 0, strlen('block-')) !== 'block-';
+		});
+
+		return $templates;
+	}
+
+	# Return array of block templates for this module
+	public function block_templates () {
+		return $this->get_templates($this->path . '/block-*.php', 'block-template');
+	}
+
+	# Return array of templates (all files not named module.php and not prefixed with __ in $path)
+	public function get_templates ($path, $defaultTemplate = 'template') {
 		$templates = [];
 
 		foreach (glob($path) as $template) {
 			$filename = pathinfo($template)['filename'];
 
-			if ($filename !== 'module' and $filename !== 'block-template' and substr($filename, 0, 2) !== '__') {
+			if ($filename !== 'module' and substr($filename, 0, 2) !== '__') {
 				$screenshotPath = "{$this->path}/$filename.png";
 				$screenshotUrl = "{$this->uri}/$filename.png";
 				$meta = get_file_data($template, self::$fileHeaders);
 				$meta['screenshot'] = file_exists($screenshotPath) ? $screenshotUrl : null;
 				$meta['filename'] = $filename;
 
-				if ($filename === 'template' && empty($meta['name'])) {
+				if ($filename === $defaultTemplate && empty($meta['name'])) {
 					$meta['name'] = __('Default Template', 'sleek');
 				}
-				elseif ($filename !== 'template') {
+				elseif ($filename !== $defaultTemplate) {
 					$meta['name'] = empty($meta['name']) ? \Sleek\Utils\convert_case($filename, 'title') : $meta['name'];
 				}
 
@@ -135,7 +153,7 @@ abstract class Module {
 
 		sort($templates);
 
-		return $templates;
+		return count($templates) ? array_values($templates) : null;
 	}
 
 	# Return meta data about module
@@ -147,6 +165,7 @@ abstract class Module {
 		$meta['icon'] = file_exists($iconPath) ? $iconUrl : null;
 		$meta['icon_path'] = file_exists($iconPath) ? $iconPath : null;
 		$meta['default_template'] = empty($meta['default_template']) ? 'template' : $meta['default_template'];
+		$meta['default_block_template'] = empty($meta['default_block_template']) ? 'block-template' : $meta['default_block_template'];
 		$meta['block_template'] = file_exists($this->path . '/block-template.php') ? $this->uri . '/block-template.php' : null;
 		$meta['block_style'] = file_exists($this->path . '/block.css') ? $this->uri . '/block.css' : null;
 

@@ -176,32 +176,34 @@ function get_module_fields (array $modules, $layout = 'normal', $withTemplates =
 		}
 
 		# Insert module templates
-		# TODO: Support for HIDDEN modules??
-		if ($withTemplates and $templates) {
-			$cleanTemplates = [];
-
-			foreach ($templates as $t) {
-				$screenshot = $t['screenshot'] ? '<img src="' . $t['screenshot'] . '" class="sleek-module-template-screenshot">' : '';
-				$description = $t['description'] ? '<small class="sleek-module-template-description">' . $t['description'] . '</small>' : '';
-				$cleanTemplates[$t['filename']] = $screenshot . $t['name'] . $description;
-			}
-
-			if (count($cleanTemplates) > 1) {
-				array_unshift($field['sub_fields'], [
-					'name' => 'template',
-					'label' => __('Template', 'sleek'),
-					'type' => 'select',
-					'choices' => $cleanTemplates,
-					'default_value' => ($meta ? $meta['default_template'] : 'template'),
-					'ui' => true
-				]);
-			}
+		if ($withTemplates and $templates and count($templates) > 1) {
+			array_unshift($field['sub_fields'], get_templates_acf_field($templates, ($meta ? $meta['default_template'] : 'template')));
 		}
 
 		$fields[] = $field;
 	}
 
 	return $fields;
+}
+
+# TODO: Support for HIDDEN modules??
+function get_templates_acf_field ($templates, $defaultTemplate = 'template') {
+	$cleanTemplates = [];
+
+	foreach ($templates as $t) {
+		$screenshot = $t['screenshot'] ? '<img src="' . $t['screenshot'] . '" class="sleek-module-template-screenshot">' : '';
+		$description = $t['description'] ? '<small class="sleek-module-template-description">' . $t['description'] . '</small>' : '';
+		$cleanTemplates[$t['filename']] = $screenshot . $t['name'] . $description;
+	}
+
+	return [
+		'name' => 'template',
+		'label' => __('Template', 'sleek'),
+		'type' => 'select',
+		'choices' => $cleanTemplates,
+		'default_value' => $defaultTemplate,
+		'ui' => true
+	];
 }
 
 #############################
