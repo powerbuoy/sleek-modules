@@ -44,6 +44,10 @@ add_action('admin_head', function () {
 				box-shadow: 0 0 0 100vw rgba(0, 0, 0, .8);
 			}
 
+			div.acf-tooltip:before {
+				display: none;
+			}
+
 			@media (min-width: 600px) {
 				div.acf-fc-popup {
 					--sleek-anmp-cols: 3;
