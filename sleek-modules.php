@@ -4,6 +4,7 @@ namespace Sleek\Modules;
 require_once __DIR__ . '/add-new-module-preview.php';
 require_once __DIR__ . '/global-modules.php';
 require_once __DIR__ . '/inline-edit-flex-module.php';
+require_once __DIR__ . '/module-icons.php';
 require_once __DIR__ . '/preview-dummy-module.php';
 require_once __DIR__ . '/preview-flex-module.php';
 require_once __DIR__ . '/register-blocks.php';
