@@ -30,9 +30,9 @@ add_action('admin_head', function () {
 		?>
 		<style>
 			figure.sleek-module-icon {
-				width: 3rem;
-				height: 3rem;
-				margin: 0 0.5rem;
+				width: 48px;
+				height: 48px;
+				margin: 0 8px;
 				display: inline-block;
 				vertical-align: middle;
 			}
@@ -41,6 +41,10 @@ add_action('admin_head', function () {
 				width: 100%;
 				height: 100%;
 				object-fit: contain;
+			}
+
+			.acf-flexible-content .layout .acf-fc-layout-controls {
+				top: 24px;
 			}
 		</style>
 		<?php
