@@ -12,10 +12,7 @@ add_action('after_setup_theme', function () {
 			if (class_exists($fullClassName)) {
 				$module = new $fullClassName;
 				$meta = $module->meta();
-
-				if ($meta['icon']) {
-					$title = '<figure class="sleek-module-icon"><img src="' . $meta['icon'] . '"></figure> ' . $title;
-				}
+				$title = '<figure class="sleek-module-icon"><img src="' . ($meta['icon'] ?? 'https://placehold.it/800x800?text=N/A') . '"></figure> ' . $title;
 			}
 
 			return $title;
