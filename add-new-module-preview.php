@@ -68,6 +68,20 @@ add_action('admin_head', function () {
 				}
 			}
 
+			/* Module category */
+			div.acf-fc-popup section h2 {
+				text-align: center;
+				font-size: 24px;
+				font-weight: bold;
+				color: #222;
+				margin: 0 0 16px;
+			}
+
+			div.acf-fc-popup section:only-child h2 {
+				display: none; /* NOTE: Hide category if only one */
+			}
+
+			/* List of modules */
 			div.acf-fc-popup ul {
 				display: grid;
 				grid-gap: 2rem;
@@ -148,43 +162,75 @@ add_action('admin_footer', function () {
 		<script>
 			var moduleData = <?php echo json_encode(get_module_data()) ?>;
 
-			document.querySelectorAll('a[data-name="add-layout"]').forEach(function (button) {
-				button.addEventListener('click', function (e) {
-					// NOTE: Wait for popup to render
-					setTimeout(function () {
-						// Go through every acf-fc-popup element (there should only be one)
-						document.querySelectorAll('div.acf-fc-popup').forEach(function (popup) {
-							// Now insert additional data to all links
-							popup.querySelectorAll('li').forEach(function (mod) {
-								var link = mod.querySelector('a');
-								var moduleName = link.dataset.layout || null;
-								var moduleInfo = moduleData[moduleName] || {};
+			document.querySelectorAll('script.tmpl-popup').forEach(template => {
+				var groups = {"Uncategorized": []};
+				var temp = document.createElement('div');
 
-								if (moduleInfo.description) {
-									var description = document.createElement('p');
+				// So we can work with the template DOM
+				temp.innerHTML = template.innerHTML;
 
-									description.innerHTML = moduleInfo.description;
+				// Create new module HTML
+				temp.querySelectorAll('li').forEach(li => {
+					var newModule = document.createElement('div');
 
-									link.appendChild(description);
-								}
+					// Start off with the old HTML
+					newModule.innerHTML = li.innerHTML;
 
-								var screenshot = document.createElement('figure');
-								var src = 'https://placehold.it/800x800?text=' + (moduleInfo.name || link.innerText);
+					// Grab stuff we need
+					var link = newModule.querySelector('a');
+					var moduleName = link.dataset.layout || null;
+					var moduleInfo = moduleData[moduleName] || {};
+					var category = moduleInfo.category || 'Uncategorized';
 
-								if (moduleInfo.icon) {
-									src = moduleInfo.icon;
-								}
-								else if (moduleInfo.screenshot) {
-									src = moduleInfo.screenshot;
-								}
+					// Add description
+					if (moduleInfo.description) {
+						var description = document.createElement('p');
 
-								screenshot.innerHTML = '<img src="' + src + '">';
+						description.innerHTML = moduleInfo.description;
 
-								link.prepend(screenshot);
-							});
-						});
-					}, 50); // NOTE: Wait for popup to render
+						link.appendChild(description);
+					}
+
+					// Add screenshot
+					var screenshot = document.createElement('figure');
+					var src = 'https://placehold.it/800x800?text=' + (moduleInfo.name || link.innerText);
+
+					if (moduleInfo.icon) {
+						src = moduleInfo.icon;
+					}
+					else if (moduleInfo.screenshot) {
+						src = moduleInfo.screenshot;
+					}
+
+					screenshot.innerHTML = '<img src="' + src + '">';
+
+					link.prepend(screenshot);
+
+					// Now group by category
+					if (typeof groups[category] === 'undefined') {
+						groups[category] = [];
+					}
+
+					groups[category].push(newModule);
 				});
+
+				// Now create group HTML
+				var newTemplate = '<div>';
+
+				for (var catName in groups) {
+					newTemplate += '<section><h2>' + catName + '</h2><ul>';
+
+					groups[catName].forEach(module => {
+						newTemplate += '<li>' + module.innerHTML + '</li>';
+					});
+
+					newTemplate += '</ul></section>';
+				}
+
+				newTemplate += '</div>';
+
+				// Replace current template
+				template.innerHTML = newTemplate;
 			});
 		</script>
 		<?php
