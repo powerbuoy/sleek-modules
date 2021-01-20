@@ -69,12 +69,18 @@ add_action('admin_head', function () {
 			}
 
 			/* Module category */
+			div.acf-fc-popup section:not(:last-child) {
+				padding-bottom: 2rem;
+				margin-bottom: 2rem;
+				border-bottom: 1px solid #ccc;
+			}
+
 			div.acf-fc-popup section h2 {
 				text-align: center;
-				font-size: 24px;
+				font-size: 1.5rem;
 				font-weight: bold;
 				color: #222;
-				margin: 0 0 16px;
+				margin: 0 0 1rem;
 			}
 
 			div.acf-fc-popup section:only-child h2 {
@@ -84,7 +90,7 @@ add_action('admin_head', function () {
 			/* List of modules */
 			div.acf-fc-popup ul {
 				display: grid;
-				grid-gap: 2rem;
+				grid-gap: 1rem;
 				grid-template-columns: repeat(var(--sleek-anmp-cols), minmax(0, 1fr));
 				margin: 0;
 				list-style: none;
@@ -99,9 +105,9 @@ add_action('admin_head', function () {
 
 				display: block;
 				position: relative;
-				padding: 1.5rem;
+				padding: 1rem;
 
-				font-size: 18px;
+				font-size: 1rem;
 				font-weight: bold;
 				color: #222;
 				text-align: center;
@@ -109,7 +115,7 @@ add_action('admin_head', function () {
 				border-radius: 0.25rem;
 				box-shadow: none;
 				transform: scale(1);
-				transition: all 0.4s ease;
+				transition: all 0.25s ease;
 			}
 
 			div.acf-fc-popup ul li > a:hover {
@@ -122,7 +128,8 @@ add_action('admin_head', function () {
 
 			div.acf-fc-popup ul li > a figure {
 				position: relative;
-				margin: 0 0 16px;
+				margin: 0 auto 1rem;
+				max-width: 8rem;
 			}
 
 			div.acf-fc-popup ul li > a figure::before {
@@ -141,8 +148,8 @@ add_action('admin_head', function () {
 			}
 
 			div.acf-fc-popup ul li > a p {
-				margin: 16px 0 0;
-				font-size: 12px;
+				margin: 0.5rem 0 0;
+				font-size: 0.75rem;
 				font-weight: normal;
 			}
 
@@ -214,17 +221,28 @@ add_action('admin_footer', function () {
 					groups[category].push(newModule);
 				});
 
+				// Sort by category name
+				// https://stackoverflow.com/questions/5467129/sort-javascript-object-by-key
+				var orderedGroups = Object.keys(groups).sort().reduce((obj, key) => {
+					obj[key] = groups[key];
+
+					return obj;
+				}, {});
+
 				// Now create group HTML
 				var newTemplate = '<div>';
 
-				for (var catName in groups) {
-					newTemplate += '<section><h2>' + catName + '</h2><ul>';
+				for (var catName in orderedGroups) {
+					// Make sure there are modules in the group (Uncategorized may be empty)
+					if (groups[catName].length) {
+						newTemplate += '<section><h2>' + catName + '</h2><ul>';
 
-					groups[catName].forEach(module => {
-						newTemplate += '<li>' + module.innerHTML + '</li>';
-					});
+						groups[catName].forEach(module => {
+							newTemplate += '<li>' + module.innerHTML + '</li>';
+						});
 
-					newTemplate += '</ul></section>';
+						newTemplate += '</ul></section>';
+					}
 				}
 
 				newTemplate += '</div>';
