@@ -136,7 +136,11 @@ abstract class Module {
 			if ($filename !== 'module' and substr($filename, 0, 2) !== '__') {
 				$screenshotPath = "{$this->path}/$filename.png";
 				$screenshotUrl = "{$this->uri}/$filename.png";
-				$meta = get_file_data($template, self::$fileHeaders);
+
+				if (is_admin()) {
+					$meta = get_file_data($template, self::$fileHeaders);
+				}
+
 				$meta['screenshot'] = file_exists($screenshotPath) ? $screenshotUrl : null;
 				$meta['filename'] = $filename;
 
@@ -160,7 +164,11 @@ abstract class Module {
 	public function meta () {
 		$iconPath = $this->path . '/icon.svg';
 		$iconUrl = $this->uri . '/icon.svg';
-		$meta = get_file_data($this->path . '/module.php', self::$fileHeaders);
+
+		if (is_admin()) {
+			$meta = get_file_data($this->path . '/module.php', self::$fileHeaders);
+		}
+
 		$meta['name'] = empty($meta['name']) ? \Sleek\Utils\convert_case($this->moduleName, 'title') : $meta['name'];
 		$meta['icon'] = file_exists($iconPath) ? $iconUrl : null;
 		$meta['icon_path'] = file_exists($iconPath) ? $iconPath : null;
