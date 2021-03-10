@@ -192,8 +192,8 @@ function get_templates_acf_field ($templates, $defaultTemplate = 'template') {
 	$cleanTemplates = [];
 
 	foreach ($templates as $t) {
-		$screenshot = $t['screenshot'] ? '<img src="' . $t['screenshot'] . '" class="sleek-module-template-screenshot">' : '';
-		$description = $t['description'] ? '<small class="sleek-module-template-description">' . $t['description'] . '</small>' : '';
+		$screenshot = !empty($t['screenshot']) ? '<img src="' . $t['screenshot'] . '" class="sleek-module-template-screenshot">' : '';
+		$description = !empty($t['description']) ? '<small class="sleek-module-template-description">' . $t['description'] . '</small>' : '';
 		$cleanTemplates[$t['filename']] = $screenshot . $t['name'] . $description;
 	}
 

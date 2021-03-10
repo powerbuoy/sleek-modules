@@ -18,10 +18,10 @@ add_action('after_setup_theme', function () {
 				# Default block config
 				$config = [
 					'name' => $moduleName,
-					'title' => $meta['name'],
-					'description' => $meta['description'],
-					'category' => $meta['category'],
-					'icon' => $meta['dashicon'] ? str_replace('dashicon-', '', $meta['dashicon']) : ($meta['icon_path'] ? file_get_contents($meta['icon_path']) : ''),
+					'title' => $meta['name'] ?? 'N/A',
+					'description' => $meta['description'] ?? '',
+					'category' => $meta['category'] ?? '',
+					'icon' => !empty($meta['dashicon']) ? str_replace('dashicon-', '', $meta['dashicon']) : (!empty($meta['icon_path']) ? file_get_contents($meta['icon_path']) : ''),
 					'supports' => ['align' => false]
 				];
 
