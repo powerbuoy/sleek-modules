@@ -100,7 +100,7 @@ abstract class Module {
 				$additionalData = [];
 			}
 
-			\Sleek\Utils\get_template_part($templatePath, null, array_merge($this->templateData, $additionalData));
+			\Sleek\Utils\get_template_part($templatePath, null, array_merge($additionalData, $this->templateData));
 		}
 		# No template found!
 		else {
