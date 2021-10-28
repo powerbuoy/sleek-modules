@@ -168,7 +168,7 @@ add_filter('sleek/modules/dummy_field_value', function ($value, $field, $module,
 	# oEmbed
 	# TODO...
 	elseif ($field['type'] === 'oembed') {
-		return apply_filters('embed_oembed_html', wp_oembed_get('https://www.youtube.com/watch?v=M7g7Pfx6zjg'));
+		return apply_filters('embed_oembed_html', wp_oembed_get('https://www.youtube.com/watch?v=M7g7Pfx6zjg'), 'https://www.youtube.com/watch?v=M7g7Pfx6zjg');
 	}
 
 	# Gallery
