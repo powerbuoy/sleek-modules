@@ -145,7 +145,7 @@ abstract class Module {
 				$meta['filename'] = $filename;
 
 				if ($filename === $defaultTemplate && empty($meta['name'])) {
-					$meta['name'] = __('Default Template', 'sleek');
+					$meta['name'] = __('Default Template', 'sleek_admin');
 				}
 				elseif ($filename !== $defaultTemplate) {
 					$meta['name'] = empty($meta['name']) ? \Sleek\Utils\convert_case($filename, 'title') : $meta['name'];

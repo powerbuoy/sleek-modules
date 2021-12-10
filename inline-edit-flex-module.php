@@ -154,11 +154,11 @@ add_action('init', function () {
 						<body>
 							<header>
 								<?php if ($moduleTitle) : ?>
-									<h1><?php printf(__('Edit %s', 'sleek'), $moduleTitle) ?></h1>
+									<h1><?php printf(__('Edit %s', 'sleek_admin'), $moduleTitle) ?></h1>
 								<?php endif ?>
 								<p>
 									<?php printf(
-										__('Editing %s inside %s belonging to %s', 'sleek'),
+										__('Editing %s inside %s belonging to %s', 'sleek_admin'),
 										"<mark>$moduleTitle</mark>",
 										"<mark>$areaTitle</mark>",
 										"<mark>$postIdTitle</mark>"
@@ -245,7 +245,7 @@ add_action('after_setup_theme', function () {
 				<a href="#dialog-sleek-modules-inline-edit-<?php echo $where ?>-<?php echo $id ?>"
 					class="sleek-modules-inline-edit-module"
 					data-dialog-data='<?php echo json_encode(['area' => $where, 'post_id' => $id, 'index' => $index]) ?>'>
-					<?php printf(__('Edit %s', 'sleek'), \Sleek\Utils\convert_case($module, 'title')) ?>
+					<?php printf(__('Edit %s', 'sleek_admin'), \Sleek\Utils\convert_case($module, 'title')) ?>
 				</a>
 			</nav>
 			<?php

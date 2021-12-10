@@ -177,8 +177,8 @@ function get_module_fields (array $modules, $layout = 'normal', $withTemplates =
 			$field['sub_fields'][] = [
 				'name' => 'message',
 				'type' => 'message',
-				'label' => __('No config', 'sleek'),
-				'message' => __('This module requires no configuration.', 'sleek')
+				'label' => __('No config', 'sleek_admin'),
+				'message' => __('This module requires no configuration.', 'sleek_admin')
 			];
 		}
 
@@ -207,7 +207,7 @@ function get_templates_acf_field ($templates, $defaultTemplate = 'template') {
 
 	return [
 		'name' => 'template',
-		'label' => __('Template', 'sleek'),
+		'label' => __('Template', 'sleek_admin'),
 		'type' => 'select',
 		'choices' => $cleanTemplates,
 		'default_value' => $defaultTemplate,

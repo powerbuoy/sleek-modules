@@ -45,8 +45,8 @@ add_filter('sleek/modules/dummy_field_value', function ($value, $field, $module,
 	# Special
 	# Module Title
 	if ($field['type'] === 'text' and $field['name'] === 'title' and $level === 1) {
-		$moduleTitle =	__(\Sleek\Utils\convert_case($module, 'title'), 'sleek');
-		$templateTitle = $template === 'template' ? __('Default Template', 'sleek') : __(\Sleek\Utils\convert_case($template, 'title'), 'sleek');
+		$moduleTitle =	__(\Sleek\Utils\convert_case($module, 'title'), 'sleek_admin');
+		$templateTitle = $template === 'template' ? __('Default Template', 'sleek_admin') : __(\Sleek\Utils\convert_case($template, 'title'), 'sleek_admin');
 
 		return "$moduleTitle <small>$templateTitle</small>";
 	}
@@ -244,7 +244,7 @@ add_filter('sleek/modules/dummy_field_value', function ($value, $field, $module,
 	# Link
 	# TODO: Randomize URLs, targets and more texts (+ return_format?)
 	elseif ($field['type'] === 'link') {
-		$texts = [__('Read more', 'sleek'), __('Click here', 'sleek'), __('Contact us', 'sleek')];
+		$texts = [__('Read more', 'sleek_admin'), __('Click here', 'sleek_admin'), __('Contact us', 'sleek_admin')];
 
 		return [
 			'url' => 'https://www.google.com',

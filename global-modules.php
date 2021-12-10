@@ -15,8 +15,8 @@ add_action('acf/init', function () {
 		# Create Global Module Post Type
 		register_post_type('sleek_global_module', [
 			'labels' => [
-				'name' => __('Global Modules', 'sleek'),
-				'singular_name' => __('Global Modules', 'sleek')
+				'name' => __('Global Modules', 'sleek_admin'),
+				'singular_name' => __('Global Modules', 'sleek_admin')
 			],
 			'public' => false,
 			'show_ui' => true,
@@ -28,7 +28,7 @@ add_action('acf/init', function () {
 		# Add a Flexible Content Field to it
 		acf_add_local_field_group([
 			'key' => 'group_global_modules',
-			'title' => __('Global Modules', 'sleek'),
+			'title' => __('Global Modules', 'sleek_admin'),
 			'location' => [[['param' => 'post_type', 'operator' => '==', 'value' => 'sleek_global_module']]],
 			'menu_order' => 1,
 			'fields' => [
@@ -36,8 +36,8 @@ add_action('acf/init', function () {
 					'key' => 'field_global_modules',
 					'name' => 'global_modules',
 					'type' => 'flexible_content',
-					'label' => __('Global Modules', 'sleek'),
-					'button_label' => __('Add a Module', 'sleek'),
+					'label' => __('Global Modules', 'sleek_admin'),
+					'button_label' => __('Global Modules', 'sleek_admin'),
 					'layouts' => \Sleek\Acf\generate_keys(
 						get_module_fields(
 							apply_filters('sleek/modules/global_modules', $allowedModules), # TODO: Deprecate
