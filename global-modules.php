@@ -37,7 +37,7 @@ add_action('acf/init', function () {
 					'name' => 'global_modules',
 					'type' => 'flexible_content',
 					'label' => __('Global Modules', 'sleek_admin'),
-					'button_label' => __('Global Modules', 'sleek_admin'),
+					'button_label' => __('Add Global Module', 'sleek_admin'),
 					'layouts' => \Sleek\Acf\generate_keys(
 						get_module_fields(
 							apply_filters('sleek/modules/global_modules', $allowedModules), # TODO: Deprecate
