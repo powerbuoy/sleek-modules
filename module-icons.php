@@ -8,12 +8,15 @@ add_action('after_setup_theme', function () {
 		add_filter('acf/fields/flexible_content/layout_title', function ($title, $field, $layout, $i) {
 			$moduleName = $layout['name'];
 			$fullClassName = "\\Sleek\Modules\\" . \Sleek\Utils\convert_case($moduleName, 'pascal');
+			$fallbackIcon = get_stylesheet_directory_uri() . '/vendor/powerbuoy/sleek-modules/icon-fallback.svg';
 
 			if (class_exists($fullClassName)) {
 				$module = new $fullClassName;
 				$meta = $module->meta();
-				$fallbackIcon = get_stylesheet_directory_uri() . '/vendor/powerbuoy/sleek-modules/icon-fallback.svg';
 				$title = '<figure class="sleek-module-icon"><img src="' . ($meta['icon'] ?? $fallbackIcon) . '"></figure> ' . $title;
+			}
+			else {
+				$title = '<figure class="sleek-module-icon"><img src="' . $fallbackIcon . '"></figure> ' . $title;
 			}
 
 			return $title;
