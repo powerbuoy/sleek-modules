@@ -1,7 +1,7 @@
 <?php
 namespace Sleek\Modules;
 
-#[AllowDynamicProperties]
+#[\AllowDynamicProperties]
 abstract class Module {
 	protected $templateData;
 	protected $moduleName;
