@@ -109,12 +109,6 @@ function render_flexible ($area, $id = null) {
 # Returns all ACF fields for modules
 # $layout can be one of 'flexible', 'tabs', 'accordion', or 'normal'
 function get_module_fields (array $modules, $layout = 'normal', $withTemplates = true) {
-	$cacheKey = md5(json_encode($modules) . $layout . ($withTemplates ? 'true' : 'false'));
-
-	if ($cache = wp_cache_get($cacheKey, 'sleek_get_module_fields')) {
-		return $cache;
-	}
-
 	$fields = [];
 
 	foreach ($modules as $module) {
@@ -190,8 +184,6 @@ function get_module_fields (array $modules, $layout = 'normal', $withTemplates =
 		$fields[] = $field;
 	}
 
-	wp_cache_set($cacheKey, $fields, 'sleek_get_module_fields');
-
 	return $fields;
 }
 
@@ -228,9 +220,10 @@ add_action('admin_head', function () {
 			display: none;
 		}
 
-		.select2-container--default .select2-results > .select2-results__options[id$="_template-results"] {
+		/* NOTE: Not sure how this was ever useful? But it breaks the dropdown scroll */
+		/* .select2-container--default .select2-results > .select2-results__options[id$="_template-results"] {
 			overflow: visible;
-		}
+		} */
 
 		span.select2-results > ul > li {
 			position: relative;
