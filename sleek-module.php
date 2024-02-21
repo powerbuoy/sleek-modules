@@ -1,13 +1,14 @@
 <?php
 namespace Sleek\Modules;
 
-#[\AllowDynamicProperties]
 abstract class Module {
 	protected $templateData;
 	protected $moduleName;
 	protected $snakeName;
 	protected $className;
 	protected $acfKey;
+	protected $path;
+	protected $uri;
 	protected static $fileHeaders = [
 		'name' => 'Name',
 		'description' => 'Description',
