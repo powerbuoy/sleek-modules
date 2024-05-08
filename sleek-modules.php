@@ -141,7 +141,7 @@ function get_module_fields (array $modules, $layout = 'normal', $withTemplates =
 		if ($layout !== 'flexible') {
 			$field['type'] = 'group';
 			$field['wrapper'] = [
-				'class' => 'sleek-module-group'
+				'class' => 'sleek-plain-group'
 			];
 
 			# With tabs
@@ -187,7 +187,7 @@ function get_module_fields (array $modules, $layout = 'normal', $withTemplates =
 	return $fields;
 }
 
-# TODO: Support for HIDDEN modules??
+# TODO: Support for HIDDEN modules?? NO: https://wordpress.org/plugins/acf-hide-layout/
 function get_templates_acf_field ($templates, $defaultTemplate = 'template') {
 	$cleanTemplates = [];
 
@@ -207,11 +207,28 @@ function get_templates_acf_field ($templates, $defaultTemplate = 'template') {
 	];
 }
 
-#############################
-# Style the template dropdown
+####################################
+# Style the template dropdown & more
 add_action('admin_head', function () {
 	?>
 	<style>
+		/* Plain ACF groups (no border or label) (NOTE: module-group name kept for backwards compat) */
+		div.sleek-plain-group,
+		div.sleek-module-group {
+			padding: 0 !important;
+		}
+
+		div.sleek-module-group > div.acf-label:first-child,
+		div.sleek-plain-group > div.acf-label:first-child {
+			display: none !important;
+		}
+
+		div.sleek-plain-group > .acf-input > .acf-fields.-border,
+		div.sleek-module-group > .acf-input > .acf-fields.-border {
+			border: 0 !important;
+		}
+
+		/* NOTE: Hide template description and screenshot for now */
 		.select2-selection__rendered .sleek-module-template-description {
 			display: none;
 		}
@@ -225,6 +242,7 @@ add_action('admin_head', function () {
 			overflow: visible;
 		} */
 
+		/* Style the "dropdown" as a popup instead */
 		span.select2-results > ul > li {
 			position: relative;
 		}
