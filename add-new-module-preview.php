@@ -26,15 +26,18 @@ add_action('admin_head', function () {
 	if (get_theme_support('sleek/modules/add_new_module_preview')) {
 		?>
 		<style>
-			div.acf-fc-popup {
+			#poststuff .acf-flexible-content > div.acf-fc-popup {
+				all: unset;
+
 				--sleek-anmp-cols: 1;
 
 				background: white;
 
-				position: fixed;
+				position: fixed !important;
 				left: 50% !important;
 				top: 50% !important;
 				transform: translate(-50%, -50%);
+				z-index: 99999;
 
 				width: 80vw;
 				max-width: 80rem;
@@ -44,51 +47,57 @@ add_action('admin_head', function () {
 				margin: 0 !important;
 				padding: 3rem;
 				box-shadow: 0 0 0 100vw rgba(0, 0, 0, .8);
-			}
-
-			div.acf-tooltip:before {
-				display: none;
+				border-radius: 1rem;
 			}
 
 			@media (min-width: 600px) {
-				div.acf-fc-popup {
+				#poststuff .acf-flexible-content > div.acf-fc-popup {
 					--sleek-anmp-cols: 3;
 				}
 			}
 
 			@media (min-width: 800px) {
-				div.acf-fc-popup {
+				#poststuff .acf-flexible-content > div.acf-fc-popup {
 					--sleek-anmp-cols: 4;
 				}
 			}
 
 			@media (min-width: 1200px) {
-				div.acf-fc-popup {
+				#poststuff .acf-flexible-content > div.acf-fc-popup {
 					--sleek-anmp-cols: 6;
 				}
 			}
 
 			/* Module category */
-			div.acf-fc-popup section:not(:last-child) {
+			#poststuff .acf-flexible-content > div.acf-fc-popup section {
+				all: unset;
+				display: block;
+			}
+
+			#poststuff .acf-flexible-content > div.acf-fc-popup section:not(:last-child) {
 				padding-bottom: 2rem;
 				margin-bottom: 2rem;
 				border-bottom: 1px solid #ccc;
 			}
 
-			div.acf-fc-popup section h2 {
+			#poststuff .acf-flexible-content > div.acf-fc-popup section h2 {
+				all: unset;
+				display: block;
 				text-align: center;
 				font-size: 1.5rem;
 				font-weight: bold;
 				color: #222;
 				margin: 0 0 1rem;
+				padding: 0;
 			}
 
-			div.acf-fc-popup section:only-child h2 {
+			#poststuff .acf-flexible-content > div.acf-fc-popup section:only-child h2 {
 				display: none; /* NOTE: Hide category if only one */
 			}
 
 			/* List of modules */
-			div.acf-fc-popup ul {
+			#poststuff .acf-flexible-content > div.acf-fc-popup ul {
+				all: unset;
 				display: grid;
 				grid-gap: 1rem;
 				grid-template-columns: repeat(var(--sleek-anmp-cols), minmax(0, 1fr));
@@ -96,11 +105,14 @@ add_action('admin_head', function () {
 				list-style: none;
 			}
 
-			div.acf-fc-popup ul li {
+			#poststuff .acf-flexible-content > div.acf-fc-popup ul li {
+				all: unset;
 				white-space: normal;
 			}
 
-			div.acf-fc-popup ul li > a {
+			#poststuff .acf-flexible-content > div.acf-fc-popup ul li > a {
+				all: unset;
+
 				background: white;
 
 				display: block;
@@ -111,14 +123,17 @@ add_action('admin_head', function () {
 				font-weight: bold;
 				color: #222;
 				text-align: center;
+				cursor: pointer;
 
 				border-radius: 0.25rem;
 				box-shadow: none;
+				border-radius: 0.5rem;
+
 				transform: scale(1);
 				transition: all 0.25s ease;
 			}
 
-			div.acf-fc-popup ul li > a:hover {
+			#poststuff .acf-flexible-content > div.acf-fc-popup ul li > a:hover {
 				background: white;
 				z-index: 1;
 				color: #222;
@@ -126,19 +141,19 @@ add_action('admin_head', function () {
 				box-shadow: 0 0.6rem 1.2rem rgba(0, 0, 0, 0.2), 0 0.4rem 0.4rem rgba(0, 0, 0, 0.25);
 			}
 
-			div.acf-fc-popup ul li > a figure {
+			#poststuff .acf-flexible-content > div.acf-fc-popup ul li > a figure {
 				position: relative;
 				margin: 0 auto 1rem;
 				max-width: 8rem;
 			}
 
-			div.acf-fc-popup ul li > a figure::before {
+			#poststuff .acf-flexible-content > div.acf-fc-popup ul li > a figure::before {
 				display: block;
 				content: "";
 				padding-bottom: 56.25%;
 			}
 
-			div.acf-fc-popup ul li > a figure img {
+			#poststuff .acf-flexible-content > div.acf-fc-popup ul li > a figure img {
 				position: absolute;
 				left: 50%;
 				top: 50%;
@@ -147,13 +162,13 @@ add_action('admin_head', function () {
 				max-height: 100%;
 			}
 
-			div.acf-fc-popup ul li > a p {
+			#poststuff .acf-flexible-content > div.acf-fc-popup ul li > a p {
 				margin: 0.5rem 0 0;
 				font-size: 0.75rem;
 				font-weight: normal;
 			}
 
-			div.acf-fc-popup ul li > a p + p {
+			#poststuff .acf-flexible-content > div.acf-fc-popup ul li > a p + p {
 				margin-top: 0;
 			}
 		</style>
