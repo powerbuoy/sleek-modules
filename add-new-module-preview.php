@@ -34,7 +34,7 @@ add_action('admin_head', function () {
 		if (!$is_gutenberg) {
 			?>
 			<style>
-				#poststuff .acf-flexible-content > div.acf-fc-popup {
+				div.acf-fc-popup:has(.sleek-module-preview) {
 					all: unset;
 
 					--sleek-anmp-cols: 1;
@@ -59,36 +59,36 @@ add_action('admin_head', function () {
 				}
 
 				@media (min-width: 600px) {
-					#poststuff .acf-flexible-content > div.acf-fc-popup {
+					div.acf-fc-popup:has(.sleek-module-preview) {
 						--sleek-anmp-cols: 3;
 					}
 				}
 
 				@media (min-width: 800px) {
-					#poststuff .acf-flexible-content > div.acf-fc-popup {
+					div.acf-fc-popup:has(.sleek-module-preview) {
 						--sleek-anmp-cols: 4;
 					}
 				}
 
 				@media (min-width: 1200px) {
-					#poststuff .acf-flexible-content > div.acf-fc-popup {
+					div.acf-fc-popup:has(.sleek-module-preview) {
 						--sleek-anmp-cols: 6;
 					}
 				}
 
 				/* Module category */
-				#poststuff .acf-flexible-content > div.acf-fc-popup section {
+				div.acf-fc-popup:has(.sleek-module-preview) section {
 					all: unset;
 					display: block;
 				}
 
-				#poststuff .acf-flexible-content > div.acf-fc-popup section:not(:last-child) {
+				div.acf-fc-popup:has(.sleek-module-preview) section:not(:last-child) {
 					padding-bottom: 2rem;
 					margin-bottom: 2rem;
 					border-bottom: 1px solid #ccc;
 				}
 
-				#poststuff .acf-flexible-content > div.acf-fc-popup section h2 {
+				div.acf-fc-popup:has(.sleek-module-preview) section h2 {
 					all: unset;
 					display: block;
 					text-align: center;
@@ -99,12 +99,12 @@ add_action('admin_head', function () {
 					padding: 0;
 				}
 
-				#poststuff .acf-flexible-content > div.acf-fc-popup section:only-child h2 {
+				div.acf-fc-popup:has(.sleek-module-preview) section:only-child h2 {
 					display: none; /* NOTE: Hide category if only one */
 				}
 
 				/* List of modules */
-				#poststuff .acf-flexible-content > div.acf-fc-popup ul {
+				div.acf-fc-popup:has(.sleek-module-preview) ul {
 					all: unset;
 					display: grid;
 					grid-gap: 1rem;
@@ -113,12 +113,12 @@ add_action('admin_head', function () {
 					list-style: none;
 				}
 
-				#poststuff .acf-flexible-content > div.acf-fc-popup ul li {
+				div.acf-fc-popup:has(.sleek-module-preview) ul li {
 					all: unset;
 					white-space: normal;
 				}
 
-				#poststuff .acf-flexible-content > div.acf-fc-popup ul li > a {
+				div.acf-fc-popup:has(.sleek-module-preview) ul li > a {
 					all: unset;
 
 					background: white;
@@ -141,7 +141,7 @@ add_action('admin_head', function () {
 					transition: all 0.25s ease;
 				}
 
-				#poststuff .acf-flexible-content > div.acf-fc-popup ul li > a:hover {
+				div.acf-fc-popup:has(.sleek-module-preview) ul li > a:hover {
 					background: white;
 					z-index: 1;
 					color: #222;
@@ -149,19 +149,19 @@ add_action('admin_head', function () {
 					box-shadow: 0 0.6rem 1.2rem rgba(0, 0, 0, 0.2), 0 0.4rem 0.4rem rgba(0, 0, 0, 0.25);
 				}
 
-				#poststuff .acf-flexible-content > div.acf-fc-popup ul li > a figure {
+				div.acf-fc-popup:has(.sleek-module-preview) ul li > a figure {
 					position: relative;
 					margin: 0 auto 1rem;
 					max-width: 8rem;
 				}
 
-				#poststuff .acf-flexible-content > div.acf-fc-popup ul li > a figure::before {
+				div.acf-fc-popup:has(.sleek-module-preview) ul li > a figure::before {
 					display: block;
 					content: "";
 					padding-bottom: 56.25%;
 				}
 
-				#poststuff .acf-flexible-content > div.acf-fc-popup ul li > a figure img {
+				div.acf-fc-popup:has(.sleek-module-preview) ul li > a figure img {
 					position: absolute;
 					left: 50%;
 					top: 50%;
@@ -170,13 +170,13 @@ add_action('admin_head', function () {
 					max-height: 100%;
 				}
 
-				#poststuff .acf-flexible-content > div.acf-fc-popup ul li > a p {
+				div.acf-fc-popup:has(.sleek-module-preview) ul li > a p {
 					margin: 0.5rem 0 0;
 					font-size: 0.75rem;
 					font-weight: normal;
 				}
 
-				#poststuff .acf-flexible-content > div.acf-fc-popup ul li > a p + p {
+				div.acf-fc-popup:has(.sleek-module-preview) ul li > a p + p {
 					margin-top: 0;
 				}
 			</style>
@@ -262,7 +262,7 @@ add_action('admin_footer', function () {
 					}, {});
 
 					// Now create group HTML
-					var newTemplate = '<div>';
+					var newTemplate = '<div class="sleek-module-preview">';
 
 					for (var catName in orderedGroups) {
 						// Make sure there are modules in the group (Uncategorized may be empty)
